@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 mpMegafonia.start();
 
                 while(mpMegafonia.isPlaying()){
-
+                //Se puede poner una animación
                 }
 
                     Intent mi_intent = new Intent(view.getContext(), JuegoPasaportes.class);

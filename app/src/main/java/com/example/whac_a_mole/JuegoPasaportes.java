@@ -2,7 +2,11 @@ package com.example.whac_a_mole;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -18,7 +22,11 @@ public class JuegoPasaportes extends AppCompatActivity {
 
     CountDownTimer[] espera1= new CountDownTimer[9];
     CountDownTimer[] espera2= new CountDownTimer[9];
-    //protected ImageView[] ivPas = new ImageView[10];
+
+    protected SoundPool sp;
+    protected int idAcierto,idFallo,idStamp,idFinalPartida,idMegafoniaSalir;
+
+
 
     protected ImageView ivPas1;
     protected ImageView ivPas2;
@@ -38,8 +46,9 @@ public class JuegoPasaportes extends AppCompatActivity {
     protected int[] estados ={0,0,0,0,0,0,0,0,0};
     protected int tinta = 1;//1=verde 2=rojo 0=no hay tinta
     protected int puntuacion=0;
-    protected int i=0;
     protected int tintaAlPulsar;
+
+
 
     //Funcion que oculta todos los pasaportes
     protected  void OcultaPas(){
@@ -62,11 +71,14 @@ public class JuegoPasaportes extends AppCompatActivity {
             public void onTick(long l) {
                 tvCountdown.setText(String.format("%2d",l/1000));
                 //Tiempo espera: tiempo en que desaparece el pasaporte
-                GeneraPas(5200);
+                GeneraPas(2500);
             }
             @Override
             public void onFinish() {
                 tvCountdown.setText("0");
+                sp.play(idFinalPartida, 1, 1, 1, 0, 1);
+
+
                 OcultaPas();
             //Hacer visible el botón volver
                 btVolver.setVisibility(View.VISIBLE);
@@ -89,7 +101,7 @@ public class JuegoPasaportes extends AppCompatActivity {
         tvPuntuacion.setText(Integer.toString(puntuacion));
     }
 
-    //Funcion genera un Pasaporte Aleatorio en posicion aleatoria
+    //Función genera un Pasaporte Aleatorio en posicion aleatoria
     protected void GeneraPas(long TiempoEspera){
 
 
@@ -387,6 +399,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[0]=4;
                         //pone la estampa
                         ivPas1.setImageResource(R.drawable.pas1st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[0] = new CountDownTimer(100, 100) {
                             @Override
@@ -399,9 +412,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas1.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas1.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
 
@@ -426,6 +441,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[0]=4;
                         //pone la estampa
                         ivPas1.setImageResource(R.drawable.pas2st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[0] = new CountDownTimer(100, 100) {
                             @Override
@@ -438,9 +454,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas1.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas1.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -466,6 +484,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[0]=4;
                         //pone la estampa
                         ivPas1.setImageResource(R.drawable.pas3st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[0] = new CountDownTimer(100, 100) {
@@ -479,9 +498,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas1.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas1.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -511,6 +532,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[1]=4;
                         //pone la estampa
                         ivPas2.setImageResource(R.drawable.pas1st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[1] = new CountDownTimer(100, 100) {
                             @Override
@@ -523,9 +545,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas2.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas2.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
 
@@ -550,6 +574,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[1]=4;
                         //pone la estampa
                         ivPas2.setImageResource(R.drawable.pas2st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[1] = new CountDownTimer(100, 100) {
                             @Override
@@ -562,9 +587,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas2.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas2.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -590,6 +617,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[1]=4;
                         //pone la estampa
                         ivPas2.setImageResource(R.drawable.pas3st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[1] = new CountDownTimer(100, 100) {
@@ -603,9 +631,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas2.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas2.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -637,6 +667,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[2]=4;
                         //pone la estampa
                         ivPas3.setImageResource(R.drawable.pas1st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[2] = new CountDownTimer(100, 100) {
                             @Override
@@ -649,9 +680,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas3.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas3.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
 
@@ -676,6 +709,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[2]=4;
                         //pone la estampa
                         ivPas3.setImageResource(R.drawable.pas2st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[2] = new CountDownTimer(100, 100) {
                             @Override
@@ -688,9 +722,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas3.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas3.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -716,6 +752,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[2]=4;
                         //pone la estampa
                         ivPas3.setImageResource(R.drawable.pas3st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[2] = new CountDownTimer(100, 100) {
@@ -729,9 +766,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas3.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas3.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -763,6 +802,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[3]=4;
                         //pone la estampa
                         ivPas4.setImageResource(R.drawable.pas1st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[3] = new CountDownTimer(100, 100) {
                             @Override
@@ -775,9 +815,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas4.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas4.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
 
@@ -802,6 +844,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[3]=4;
                         //pone la estampa
                         ivPas4.setImageResource(R.drawable.pas2st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[3] = new CountDownTimer(100, 100) {
                             @Override
@@ -814,9 +857,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas4.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas4.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -842,6 +887,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[3]=4;
                         //pone la estampa
                         ivPas4.setImageResource(R.drawable.pas3st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[3] = new CountDownTimer(100, 100) {
@@ -855,9 +901,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas4.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas4.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -891,6 +939,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[4]=4;
                         //pone la estampa
                         ivPas5.setImageResource(R.drawable.pas1st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[4] = new CountDownTimer(100, 100) {
                             @Override
@@ -903,9 +952,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas5.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas5.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
 
@@ -930,6 +981,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[4]=4;
                         //pone la estampa
                         ivPas5.setImageResource(R.drawable.pas2st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[4] = new CountDownTimer(100, 100) {
                             @Override
@@ -942,9 +994,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas5.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas5.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -970,6 +1024,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[4]=4;
                         //pone la estampa
                         ivPas5.setImageResource(R.drawable.pas3st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[4] = new CountDownTimer(100, 100) {
@@ -983,9 +1038,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas5.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas5.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -1020,6 +1077,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[5]=4;
                         //pone la estampa
                         ivPas6.setImageResource(R.drawable.pas1st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[5] = new CountDownTimer(100, 100) {
                             @Override
@@ -1032,9 +1090,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas6.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas6.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
 
@@ -1059,6 +1119,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[5]=4;
                         //pone la estampa
                         ivPas6.setImageResource(R.drawable.pas2st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[5] = new CountDownTimer(100, 100) {
                             @Override
@@ -1071,9 +1132,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas6.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas6.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -1099,6 +1162,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[5]=4;
                         //pone la estampa
                         ivPas6.setImageResource(R.drawable.pas3st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[5] = new CountDownTimer(100, 100) {
@@ -1112,9 +1176,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas6.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas6.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -1147,6 +1213,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[6]=4;
                         //pone la estampa
                         ivPas7.setImageResource(R.drawable.pas1st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[6] = new CountDownTimer(100, 100) {
                             @Override
@@ -1159,9 +1226,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas7.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas7.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
 
@@ -1186,6 +1255,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[6]=4;
                         //pone la estampa
                         ivPas7.setImageResource(R.drawable.pas2st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[6] = new CountDownTimer(100, 100) {
                             @Override
@@ -1198,9 +1268,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas7.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas7.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -1226,6 +1298,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[6]=4;
                         //pone la estampa
                         ivPas7.setImageResource(R.drawable.pas3st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[6] = new CountDownTimer(100, 100) {
@@ -1239,9 +1312,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas7.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas7.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -1274,6 +1349,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[7]=4;
                         //pone la estampa
                         ivPas8.setImageResource(R.drawable.pas1st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[7] = new CountDownTimer(100, 100) {
                             @Override
@@ -1286,9 +1362,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas8.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas8.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
 
@@ -1313,6 +1391,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[7]=4;
                         //pone la estampa
                         ivPas8.setImageResource(R.drawable.pas2st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[7] = new CountDownTimer(100, 100) {
                             @Override
@@ -1325,9 +1404,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas8.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas8.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -1353,6 +1434,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[7]=4;
                         //pone la estampa
                         ivPas8.setImageResource(R.drawable.pas3st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[7] = new CountDownTimer(100, 100) {
@@ -1366,9 +1448,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas8.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas8.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -1400,6 +1484,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[8]=4;
                         //pone la estampa
                         ivPas9.setImageResource(R.drawable.pas1st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[8] = new CountDownTimer(100, 100) {
                             @Override
@@ -1412,9 +1497,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas9.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas9.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
 
@@ -1439,6 +1526,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[8]=4;
                         //pone la estampa
                         ivPas9.setImageResource(R.drawable.pas2st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[8] = new CountDownTimer(100, 100) {
                             @Override
@@ -1451,9 +1539,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas9.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas9.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -1479,6 +1569,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[8]=4;
                         //pone la estampa
                         ivPas9.setImageResource(R.drawable.pas3st);
+                        sp.play(idStamp, 1, 1, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[8] = new CountDownTimer(100, 100) {
@@ -1492,9 +1583,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas9.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas9.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //segunda espera para que se vea el sello
@@ -1532,6 +1625,7 @@ public class JuegoPasaportes extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
 
+
         ivPas1=findViewById(R.id.ivPas1);
         ivPas2=findViewById(R.id.ivPas2);
         ivPas3=findViewById(R.id.ivPas3);
@@ -1546,6 +1640,18 @@ public class JuegoPasaportes extends AppCompatActivity {
         tvCountdown=findViewById(R.id.tvCountdown);
         tvPuntuacion=findViewById(R.id.tvPuntuacion);
         btVolver=findViewById(R.id.btVolver);
+
+        //sonidos
+        AudioAttributes audioAttributes = new
+                AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(
+                AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+        sp = new SoundPool.Builder().setMaxStreams(5).setAudioAttributes(audioAttributes).build();
+
+        idStamp= sp.load(this,R.raw.stamp,1);
+        idAcierto= sp.load(this,R.raw.acierto,1);
+        idFallo= sp.load(this,R.raw.fallo,1);
+        idFinalPartida= sp.load(this,R.raw.finalpartida,1);
+
 
 
         //Hacemos los pasaportes y el boton volver invisibles
@@ -1652,8 +1758,23 @@ public class JuegoPasaportes extends AppCompatActivity {
 
     btVolver.setOnClickListener(new View.OnClickListener() {
         @Override
+
         public void onClick(View view) {
+
+            MediaPlayer mpMegafoniaSalir= MediaPlayer.create (JuegoPasaportes.this, R.raw.megafoniasalir);
+                mpMegafoniaSalir.setVolume(0.75f, 0.75f);
+                mpMegafoniaSalir.setLooping(false);
+                mpMegafoniaSalir.start();
+
+
+        while(mpMegafoniaSalir.isPlaying()){
+        //Se puede poner una animación
+        }
+            Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
+            mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(mi_intent);
             finish();
+
         }
     });
 
