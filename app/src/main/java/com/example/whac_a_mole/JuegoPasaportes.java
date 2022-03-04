@@ -18,14 +18,15 @@ public class JuegoPasaportes extends AppCompatActivity {
 
     CountDownTimer CDT;
     CountDownTimer[] tiempoEspera= new CountDownTimer[9];
-    long tiempoMilisegundos =60000;
-
+    long tiempoMilisegundos =10000;
+    long intervalAparicionPas=1000;
+    long tiempoDesaparecePas=2500;
+    long tiempoRestante;
     CountDownTimer[] espera1= new CountDownTimer[9];
     CountDownTimer[] espera2= new CountDownTimer[9];
 
     protected SoundPool sp;
-    protected int idAcierto,idFallo,idStamp,idFinalPartida,idMegafoniaSalir;
-
+    protected int idAcierto,idFallo,idStamp,idFinalPartida;
 
 
     protected ImageView ivPas1;
@@ -42,16 +43,33 @@ public class JuegoPasaportes extends AppCompatActivity {
     protected TextView tvCountdown;
     protected TextView tvPuntuacion;
     protected Button btVolver;
+
     protected int estadoGlobal;
     protected int[] estados ={0,0,0,0,0,0,0,0,0};
     protected int tinta = 1;//1=verde 2=rojo 0=no hay tinta
     protected int puntuacion=0;
+    protected int legalesAceptados;
+    protected int legalesRechazados;
+    protected int ilegalesAceptados;
+    protected int ilegalesRechazados;
+    protected int sinAtender;
+    protected int combo;
     protected int tintaAlPulsar;
 
-
+    //resumen
+    protected ImageView ivPortafolio;
+    protected TextView tvLegalesAceptados;
+    protected TextView tvLegalesRechazados;
+    protected TextView tvIlegalesAceptados;
+    protected TextView tvIlegalesRechazados;
+    protected TextView tvCombo;
+    protected TextView tvPuntuacionResumen;
+    protected TextView tvResumen;
+    protected TextView tvSinAtender;
+    protected TextView tvRate;
 
     //Funcion que oculta todos los pasaportes
-    protected  void OcultaPas(){
+    protected  void OcultaPasyResum(){
         ivPas1.setVisibility(View.INVISIBLE);
         ivPas2.setVisibility(View.INVISIBLE);
         ivPas3.setVisibility(View.INVISIBLE);
@@ -61,28 +79,90 @@ public class JuegoPasaportes extends AppCompatActivity {
         ivPas7.setVisibility(View.INVISIBLE);
         ivPas8.setVisibility(View.INVISIBLE);
         ivPas9.setVisibility(View.INVISIBLE);
+
+        btVolver.setVisibility(View.INVISIBLE);
+
+        ivPortafolio.setVisibility(View.INVISIBLE);
+        tvLegalesAceptados.setVisibility(View.INVISIBLE);
+        tvLegalesRechazados.setVisibility(View.INVISIBLE);
+        tvIlegalesAceptados.setVisibility(View.INVISIBLE);
+        tvIlegalesRechazados.setVisibility(View.INVISIBLE);
+        tvCombo.setVisibility(View.INVISIBLE);
+        tvPuntuacionResumen.setVisibility(View.INVISIBLE);
+        tvResumen.setVisibility(View.INVISIBLE);
+        tvSinAtender.setVisibility(View.INVISIBLE);
+        tvRate.setVisibility(View.INVISIBLE);
+
+
+    }
+
+    //Funcion que muestra el resumen y el boton volver
+    protected void MuestraResum(){
+
+        ivPortafolio.setVisibility(View.VISIBLE);
+        tvLegalesAceptados.setVisibility(View.VISIBLE);
+        tvLegalesRechazados.setVisibility(View.VISIBLE);
+        tvIlegalesAceptados.setVisibility(View.VISIBLE);
+        tvIlegalesRechazados.setVisibility(View.VISIBLE);
+        tvCombo.setVisibility(View.VISIBLE);
+        tvPuntuacionResumen.setVisibility(View.VISIBLE);
+        tvResumen.setVisibility(View.VISIBLE);
+        tvSinAtender.setVisibility(View.VISIBLE);
+        tvRate.setVisibility(View.VISIBLE);
+        ivTintaVerde.setScaleY(1);
+        ivTintaVerde.setScaleX(1);
+        ivTintaRoja.setScaleY(1);
+        ivTintaRoja.setScaleX(1);
+        //Hacer visible el botón volver
+        btVolver.setVisibility(View.VISIBLE);
+
+        int total = legalesAceptados+legalesRechazados+ilegalesAceptados+ilegalesRechazados;
+        float velMedia=(float)total/(float)(tiempoMilisegundos/1000);
+        String strVelMedia=String.format("%.2f", velMedia);
+
+        tvSinAtender.setText("Pasaportes sin atender: "+Integer.toString(sinAtender));
+        tvLegalesAceptados.setText("Pasaportes legales aceptados: "+Integer.toString(legalesAceptados));
+        tvIlegalesRechazados.setText("Pasaportes ilegales rechazados: "+Integer.toString(ilegalesRechazados));
+        tvLegalesRechazados.setText("Pasaportes legales rechazados: "+Integer.toString(legalesRechazados));
+        tvIlegalesAceptados.setText("Pasaportes ilegales aceptados: "+Integer.toString(ilegalesAceptados));
+
+        String fullCombo="";
+        if(legalesRechazados+ilegalesAceptados+sinAtender==0){
+            fullCombo="(Full Combo)";
+        }
+        tvCombo.setText("Combo máximo: "+Integer.toString(combo)+" pasaportes seguidos");
+        tvPuntuacionResumen.setText("Puntuación total: "+Integer.toString(puntuacion)+" puntos "+fullCombo);
+
+        tvRate.setText("Ratio: "+strVelMedia+" pasaportes/segundo");
+
     }
 
     //Función inicia el CDT (Aquí se definene los tiempos)
     protected void startTimer(){
+        tiempoRestante=tiempoMilisegundos;
         //countDownInterval: Tiempo que tarda en generarse* un nuevo pasaporte (puede no generarse si toca una posicion que esta ocupada)
-        CDT = new CountDownTimer(tiempoMilisegundos, 1000) {
+        CDT = new CountDownTimer(tiempoMilisegundos, intervalAparicionPas) {
             @Override
             public void onTick(long l) {
                 tvCountdown.setText(String.format("%2d",l/1000));
                 //Tiempo espera: tiempo en que desaparece el pasaporte
-                GeneraPas(2500);
+                tiempoRestante-=intervalAparicionPas;
+                if(tiempoRestante>=tiempoDesaparecePas) {
+                    GeneraPas(tiempoDesaparecePas);
+                }
+
             }
             @Override
             public void onFinish() {
+
+                estadoGlobal=0;
                 tvCountdown.setText("0");
                 sp.play(idFinalPartida, 1, 1, 1, 0, 1);
 
+                OcultaPasyResum();
+                MuestraResum();
 
-                OcultaPas();
-            //Hacer visible el botón volver
-                btVolver.setVisibility(View.VISIBLE);
-                estadoGlobal=0;
+
             }
         }.start();
     }
@@ -108,6 +188,8 @@ public class JuegoPasaportes extends AppCompatActivity {
         //Generamos numero de mesa y de pasaporte
         int numMesa =  (int)(Math.random()*9);
         int numPas = (int)((Math.random()*3)+1);
+
+
 
         //asociamos el pasaporte a la mesa solo si no hay ya pasaporte
         if(estados[numMesa]==0){
@@ -142,6 +224,8 @@ public class JuegoPasaportes extends AppCompatActivity {
                             if (estados[0] != 0 && estados[0] != 4) {
                                 estados[0] = 0;
                                 ivPas1.setVisibility(View.INVISIBLE);
+                                sinAtender++;
+                                combo=0;
                             }
                         }
                     }.start();
@@ -173,6 +257,8 @@ public class JuegoPasaportes extends AppCompatActivity {
                             if (estados[1] != 0 && estados[1] != 4) {
                                 estados[0] = 0;
                                 ivPas2.setVisibility(View.INVISIBLE);
+                                sinAtender++;
+                                combo=0;
                             }
                         }
                     }.start();
@@ -204,6 +290,8 @@ public class JuegoPasaportes extends AppCompatActivity {
                             if (estados[2] != 0 && estados[2] != 4) {
                                 estados[2] = 0;
                                 ivPas3.setVisibility(View.INVISIBLE);
+                                sinAtender++;
+                                combo=0;
                             }
                         }
                     }.start();
@@ -232,6 +320,8 @@ public class JuegoPasaportes extends AppCompatActivity {
                             if (estados[3] != 0 && estados[3] != 4) {
                                 estados[3] = 0;
                                 ivPas4.setVisibility(View.INVISIBLE);
+                                sinAtender++;
+                                combo=0;
                             }
                         }
                     }.start();
@@ -260,6 +350,8 @@ public class JuegoPasaportes extends AppCompatActivity {
                             if (estados[4] != 0 && estados[4] != 4) {
                                 estados[4] = 0;
                                 ivPas5.setVisibility(View.INVISIBLE);
+                                sinAtender++;
+                                combo=0;
                             }
                         }
                     }.start();
@@ -288,6 +380,8 @@ public class JuegoPasaportes extends AppCompatActivity {
                             if (estados[5] != 0 && estados[5] != 4) {
                                 estados[5] = 0;
                                 ivPas6.setVisibility(View.INVISIBLE);
+                                sinAtender++;
+                                combo=0;
                             }
                         }
                     }.start();
@@ -316,6 +410,8 @@ public class JuegoPasaportes extends AppCompatActivity {
                             if (estados[6] != 0 && estados[6] != 4) {
                                 estados[6] = 0;
                                 ivPas7.setVisibility(View.INVISIBLE);
+                                sinAtender++;
+                                combo=0;
                             }
                         }
                     }.start();
@@ -344,6 +440,8 @@ public class JuegoPasaportes extends AppCompatActivity {
                             if (estados[7] != 0 && estados[7] != 4) {
                                 estados[7] = 0;
                                 ivPas8.setVisibility(View.INVISIBLE);
+                                sinAtender++;
+                                combo=0;
                             }
                         }
                     }.start();
@@ -372,6 +470,8 @@ public class JuegoPasaportes extends AppCompatActivity {
                             if (estados[8] != 0 && estados[8] != 4) {
                                 estados[8] = 0;
                                 ivPas9.setVisibility(View.INVISIBLE);
+                                sinAtender++;
+                                combo=0;
                             }
                         }
                     }.start();
@@ -387,7 +487,7 @@ public class JuegoPasaportes extends AppCompatActivity {
 
         if((estados[numMesa]!=0)&&(estados[numMesa]!=4)&&estadoGlobal==1){
 
-            //guardamos con que tinta hemos pulsado para que no pueda cambiar en la animación;
+            //guardamos con que tinta hemos pulsado para que no pueda cambiar durante la animación;
             tintaAlPulsar=tinta;
 
             switch (numMesa){
@@ -411,11 +511,15 @@ public class JuegoPasaportes extends AppCompatActivity {
                             public void onFinish() {
                                 if (tintaAlPulsar == 1) {
                                     ivPas1.setImageResource(R.drawable.pas1v);
-                                    puntuacion += 1;
+                                    puntuacion ++;
+                                    combo++;
+                                    legalesAceptados++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas1.setImageResource(R.drawable.pas1nv);
-                                    puntuacion -= 1;
+                                    puntuacion --;
+                                    combo=0;
+                                    legalesRechazados++;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -453,11 +557,15 @@ public class JuegoPasaportes extends AppCompatActivity {
                             public void onFinish() {
                                 if (tintaAlPulsar == 1) {
                                     ivPas1.setImageResource(R.drawable.pas2v);
-                                    puntuacion += 1;
+                                    puntuacion ++;
+                                    combo++;
+                                    legalesAceptados++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas1.setImageResource(R.drawable.pas2nv);
-                                    puntuacion -= 1;
+                                    puntuacion --;
+                                    combo=0;
+                                    legalesRechazados++;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -497,11 +605,15 @@ public class JuegoPasaportes extends AppCompatActivity {
                             public void onFinish() {
                                 if (tintaAlPulsar == 1) {
                                     ivPas1.setImageResource(R.drawable.pas3v);
-                                    puntuacion -= 1;
+                                    puntuacion --;
+                                    combo=0;
+                                    ilegalesAceptados++;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas1.setImageResource(R.drawable.pas3nv);
-                                    puntuacion += 1;
+                                    puntuacion ++;
+                                    combo++;
+                                    ilegalesRechazados++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -544,11 +656,15 @@ public class JuegoPasaportes extends AppCompatActivity {
                             public void onFinish() {
                                 if (tintaAlPulsar == 1) {
                                     ivPas2.setImageResource(R.drawable.pas1v);
-                                    puntuacion += 1;
+                                    puntuacion ++;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas2.setImageResource(R.drawable.pas1nv);
-                                    puntuacion -= 1;
+                                    puntuacion --;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -586,11 +702,15 @@ public class JuegoPasaportes extends AppCompatActivity {
                             public void onFinish() {
                                 if (tintaAlPulsar == 1) {
                                     ivPas2.setImageResource(R.drawable.pas2v);
-                                    puntuacion += 1;
+                                    puntuacion ++;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas2.setImageResource(R.drawable.pas2nv);
-                                    puntuacion -= 1;
+                                    puntuacion --;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -630,11 +750,15 @@ public class JuegoPasaportes extends AppCompatActivity {
                             public void onFinish() {
                                 if (tintaAlPulsar == 1) {
                                     ivPas2.setImageResource(R.drawable.pas3v);
-                                    puntuacion -= 1;
+                                    puntuacion --;
+                                    ilegalesAceptados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas2.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    ilegalesRechazados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -680,10 +804,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas3.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas3.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -722,10 +850,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas3.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas3.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -766,10 +898,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas3.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    ilegalesAceptados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas3.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    ilegalesRechazados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -815,10 +951,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas4.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas4.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -857,10 +997,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas4.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas4.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -901,10 +1045,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas4.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    ilegalesAceptados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas4.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    ilegalesRechazados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -952,10 +1100,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas5.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas5.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -994,10 +1146,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas5.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas5.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1038,10 +1194,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas5.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    ilegalesAceptados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas5.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    ilegalesRechazados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1090,10 +1250,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas6.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas6.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1132,10 +1296,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas6.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas6.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1176,10 +1344,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas6.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    ilegalesAceptados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas6.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    ilegalesRechazados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1226,10 +1398,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas7.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas7.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1268,10 +1444,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas7.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas7.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1312,10 +1492,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas7.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    ilegalesAceptados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas7.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    ilegalesRechazados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1362,10 +1546,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas8.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas8.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1404,10 +1592,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas8.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas8.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1448,10 +1640,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas8.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    ilegalesAceptados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas8.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    ilegalesRechazados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1497,10 +1693,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas9.setImageResource(R.drawable.pas1v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas9.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1539,10 +1739,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas9.setImageResource(R.drawable.pas2v);
                                     puntuacion += 1;
+                                    legalesAceptados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas9.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
+                                    legalesRechazados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1583,10 +1787,14 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 if (tintaAlPulsar == 1) {
                                     ivPas9.setImageResource(R.drawable.pas3v);
                                     puntuacion -= 1;
+                                    ilegalesAceptados++;
+                                    combo=0;
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas9.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
+                                    ilegalesRechazados++;
+                                    combo++;
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
@@ -1640,6 +1848,18 @@ public class JuegoPasaportes extends AppCompatActivity {
         tvCountdown=findViewById(R.id.tvCountdown);
         tvPuntuacion=findViewById(R.id.tvPuntuacion);
         btVolver=findViewById(R.id.btVolver);
+        ivPortafolio = findViewById(R.id.ivPortafolio);
+        tvLegalesAceptados= findViewById(R.id.tvLegalesAceptados);
+        tvLegalesRechazados= findViewById(R.id.tvLegalesRechazados);
+        tvIlegalesAceptados= findViewById(R.id.tvIlegalesAceptados);
+        tvIlegalesRechazados= findViewById(R.id.tvIlegalesRechazados);
+        tvCombo= findViewById(R.id.tvCombo);
+        tvPuntuacionResumen= findViewById(R.id.tvPuntuacionResumen);
+        tvResumen=findViewById(R.id.tvResumen);
+        tvRate=findViewById(R.id.tvRate);
+        tvSinAtender=findViewById(R.id.tvSinAtender);
+
+
 
         //sonidos
         AudioAttributes audioAttributes = new
@@ -1654,13 +1874,21 @@ public class JuegoPasaportes extends AppCompatActivity {
 
 
 
-        //Hacemos los pasaportes y el boton volver invisibles
-        OcultaPas();
-        btVolver.setVisibility(View.INVISIBLE);
+        //Hacemos los pasaportes , el boton volver invisibles y el resumen oculto
+        OcultaPasyResum();
 
-        //marco la tinta verde
-        ivTintaVerde.setScaleX(1.5F);
-        ivTintaVerde.setScaleY(1.5F);
+        //inicializamos las variables
+        legalesAceptados=0;
+        legalesRechazados=0;
+        ilegalesAceptados=0;
+        ilegalesRechazados=0;
+        sinAtender=0;
+        combo=0;
+
+
+        //marco la tinta verde que es la seleccionada
+        ivTintaVerde.setScaleX(1.3F);
+        ivTintaVerde.setScaleY(1.3F);
 
         //Ponemos el estado Global en 1 (Jugando) y iniciamos el contador
         estadoGlobal=1;
@@ -1736,10 +1964,13 @@ public class JuegoPasaportes extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 tinta=1;
-                ivTintaVerde.setScaleX(1.5F);
-                ivTintaVerde.setScaleY(1.5F);
-                ivTintaRoja.setScaleX(1F);
-                ivTintaRoja.setScaleY(1F);
+                if(estadoGlobal==1){
+                        ivTintaVerde.setScaleX(1.3F);
+                        ivTintaVerde.setScaleY(1.3F);
+                        ivTintaRoja.setScaleX(1F);
+                        ivTintaRoja.setScaleY(1F);
+                }
+
 
             }
         });
@@ -1748,10 +1979,12 @@ public class JuegoPasaportes extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 tinta=2;
-                ivTintaVerde.setScaleX(1F);
-                ivTintaVerde.setScaleY(1F);
-                ivTintaRoja.setScaleX(1.5F);
-                ivTintaRoja.setScaleY(1.5F);
+                if(estadoGlobal==1) {
+                    ivTintaVerde.setScaleX(1F);
+                    ivTintaVerde.setScaleY(1F);
+                    ivTintaRoja.setScaleX(1.3F);
+                    ivTintaRoja.setScaleY(1.3F);
+                }
             }
         });
 

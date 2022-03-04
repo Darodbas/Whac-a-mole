@@ -12,7 +12,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     protected Button btJugar;
-    //PUTIN NO TIENE RAZÓN
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
