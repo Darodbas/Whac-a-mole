@@ -11,7 +11,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    protected Button btJugar;
+    protected Button btJugar, btJugar2;
 
 
     @Override
@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         btJugar = findViewById(R.id.btJugar);
+        btJugar2 = findViewById(R.id.btJugar2);
+
         MediaPlayer mpMusica= MediaPlayer.create (MainActivity.this, R.raw.menuinicio);
         mpMusica.setVolume(0.75f, 0.75f);
         mpMusica.setLooping(true);
@@ -54,6 +56,32 @@ public class MainActivity extends AppCompatActivity {
                 mpMegafonia.stop();
                 mpMegafonia.release();
 
+            }
+        });
+
+        btJugar2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mpMusica.isPlaying()) {
+                    mpMusica.stop();
+                    mpMusica.release();
+                }
+
+                MediaPlayer mpMegafonia= MediaPlayer.create (MainActivity.this, R.raw.megafonia);
+                mpMegafonia.setVolume(0.75f, 0.75f);
+                mpMegafonia.start();
+
+                while(mpMegafonia.isPlaying()){
+                    //Se puede poner una animación
+                }
+
+                Intent mi_intent = new Intent(view.getContext(), JuegoCheckIn.class);
+                startActivity(mi_intent);
+
+
+
+                mpMegafonia.stop();
+                mpMegafonia.release();
             }
         });
     }

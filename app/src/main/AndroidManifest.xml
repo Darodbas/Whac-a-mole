@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Whacamole">
         <activity
+            android:name=".JuegoCheckIn"
+            android:exported="false" />
+        <activity
             android:name=".JuegoPasaportes"
             android:exported="false" />
         <activity
