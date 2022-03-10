@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected Button btJugar, btJugar2;
 
-    protected ImageView ivInfoPasaportes, ivInfoFacturacion;
+    protected ImageView ivInfoPasaportes, ivInfoFacturacion, ivOpciones;
     protected Spinner spDifPasaportes, spDifFacturacion;
     protected String[] nivelesDificultad={"Fácil","Intermedio","Difícil"};
 
@@ -63,12 +63,14 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
 
+
         btJugar = findViewById(R.id.btJugar);
         btJugar2 = findViewById(R.id.btJugar2);
         ivInfoFacturacion = findViewById(R.id.ivInfoFacturacion);
         ivInfoPasaportes = findViewById(R.id.ivInfoPasaportes);
         spDifFacturacion = findViewById(R.id.spDificultadcheckin);
         spDifPasaportes = findViewById(R.id.spDificultadPasaportes);
+        ivOpciones = findViewById(R.id.ivConfig);
 
         SharedPreferences Preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
 
@@ -137,6 +139,16 @@ public class MainActivity extends AppCompatActivity {
 
                 mpMegafonia.stop();
                 mpMegafonia.release();
+            }
+        });
+
+        ivOpciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent mi_intent = new Intent(view.getContext(), Opciones.class);
+                startActivity(mi_intent);
+
             }
         });
 

@@ -20,7 +20,7 @@ public class JuegoPasaportes extends AppCompatActivity {
     CountDownTimer CDT;
     CountDownTimer CDTpant;
     CountDownTimer[] tiempoEspera= new CountDownTimer[9];
-    long tiempoMilisegundos =20000;
+    long tiempoMilisegundos =60000;
     long intervalAparicionPas;
     long tiempoDesaparecePas;
     long tiempoRestante;
@@ -60,6 +60,8 @@ public class JuegoPasaportes extends AppCompatActivity {
     protected int combomax;
     protected int tintaAlPulsar;
     protected int dificultad;
+
+    protected boolean clasificatoria;
 
     //resumen
     protected ImageView ivPortafolio;
@@ -1913,10 +1915,19 @@ public class JuegoPasaportes extends AppCompatActivity {
         combo=0;
         combomax=0;
 
-        //Establecemos la dificultad
+        //Establecemos la dificultad y preferencias
 
         SharedPreferences opciones= getSharedPreferences("OPCIONESPASAPORTES",MODE_PRIVATE);
+        SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
         dificultad=opciones.getInt("DIFICULTAD",1);
+
+        tiempoMilisegundos=(preferencias.getLong("TIEMPOPASAPORTES",60))*1000;
+
+        if(tiempoMilisegundos==60){
+            clasificatoria=true;
+        }else{
+            clasificatoria=false;
+        }
 
         if(dificultad==0){
             intervalAparicionPas=2000;
