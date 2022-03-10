@@ -37,6 +37,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[5] = findViewById(R.id.mal6);
         mal[6] = findViewById(R.id.mal7);
         mal[7] = findViewById(R.id.mal8);
+        mal[8] = findViewById(R.id.mal9);
         cor1 = findViewById(R.id.cor1);
         cor2 = findViewById(R.id.cor2);
         cor3 = findViewById(R.id.cor3);
