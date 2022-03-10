@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondoprincipal2"
     tools:context=".MainActivity">
 
     <Button
@@ -11,7 +12,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:backgroundTint="#2D7E6E"
+        android:fontFamily="sans-serif-condensed"
         android:text="Pasaportes"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toStartOf="@+id/guideline37"
         app:layout_constraintStart_toStartOf="@+id/guideline36"
@@ -22,7 +25,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:backgroundTint="#2D7E6E"
+        android:fontFamily="sans-serif-condensed"
         android:text="Facturación"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline18"
         app:layout_constraintEnd_toStartOf="@+id/guideline37"
         app:layout_constraintStart_toStartOf="@+id/guideline36"
@@ -172,7 +177,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline48"
         app:layout_constraintStart_toStartOf="@+id/guideline47"
         app:layout_constraintTop_toTopOf="@+id/guideline45"
-        app:srcCompat="@drawable/config" />
+        app:srcCompat="@drawable/ajustes" />
 
     <ImageView
         android:id="@+id/ivPodio"
@@ -189,18 +194,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.33" />
+        app:layout_constraintGuide_percent="0.35" />
 
     <EditText
         android:id="@+id/etNombre"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="198dp"
+        android:layout_height="54dp"
         android:ems="10"
         android:hint="Nombre del jugador"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/guideline79"
-        app:layout_constraintEnd_toStartOf="@+id/guideline42"
-        app:layout_constraintStart_toStartOf="@+id/guideline36"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline72" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -208,7 +213,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_percent="0.42" />
 
     <ImageView
         android:id="@+id/imageView3"
