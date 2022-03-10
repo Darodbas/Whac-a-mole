@@ -3,6 +3,7 @@ package com.example.whac_a_mole;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
@@ -17,13 +18,15 @@ import android.widget.TextView;
 public class JuegoPasaportes extends AppCompatActivity {
 
     CountDownTimer CDT;
+    CountDownTimer CDTpant;
     CountDownTimer[] tiempoEspera= new CountDownTimer[9];
-    long tiempoMilisegundos =10000;
-    long intervalAparicionPas=1000;
-    long tiempoDesaparecePas=2500;
+    long tiempoMilisegundos =20000;
+    long intervalAparicionPas;
+    long tiempoDesaparecePas;
     long tiempoRestante;
     CountDownTimer[] espera1= new CountDownTimer[9];
     CountDownTimer[] espera2= new CountDownTimer[9];
+    //protected SharedPreferences opcionesPasaportes= getSharedPreferences("OPCIONESPASAPORTES",MODE_PRIVATE);
 
     protected SoundPool sp;
     protected int idAcierto,idFallo,idStamp,idFinalPartida;
@@ -54,7 +57,9 @@ public class JuegoPasaportes extends AppCompatActivity {
     protected int ilegalesRechazados;
     protected int sinAtender;
     protected int combo;
+    protected int combomax;
     protected int tintaAlPulsar;
+    protected int dificultad;
 
     //resumen
     protected ImageView ivPortafolio;
@@ -130,28 +135,24 @@ public class JuegoPasaportes extends AppCompatActivity {
         if(legalesRechazados+ilegalesAceptados+sinAtender==0){
             fullCombo="(Full Combo)";
         }
-        tvCombo.setText("Combo máximo: "+Integer.toString(combo)+" pasaportes seguidos");
+        tvCombo.setText("Combo máximo: "+Integer.toString(combomax)+" pasaportes seguidos");
         tvPuntuacionResumen.setText("Puntuación total: "+Integer.toString(puntuacion)+" puntos "+fullCombo);
 
         tvRate.setText("Ratio: "+strVelMedia+" pasaportes/segundo");
 
     }
 
-    //Función inicia el CDT (Aquí se definene los tiempos)
-    protected void startTimer(){
+    //Funcion timer Por pantalla
+    protected void startPantTimer(){
         tiempoRestante=tiempoMilisegundos;
         //countDownInterval: Tiempo que tarda en generarse* un nuevo pasaporte (puede no generarse si toca una posicion que esta ocupada)
-        CDT = new CountDownTimer(tiempoMilisegundos, intervalAparicionPas) {
+        CDTpant = new CountDownTimer(tiempoMilisegundos, 1000) {
             @Override
             public void onTick(long l) {
                 tvCountdown.setText(String.format("%2d",l/1000));
-                //Tiempo espera: tiempo en que desaparece el pasaporte
-                tiempoRestante-=intervalAparicionPas;
-                if(tiempoRestante>=tiempoDesaparecePas) {
-                    GeneraPas(tiempoDesaparecePas);
                 }
 
-            }
+
             @Override
             public void onFinish() {
 
@@ -162,6 +163,28 @@ public class JuegoPasaportes extends AppCompatActivity {
                 OcultaPasyResum();
                 MuestraResum();
 
+
+            }
+        }.start();
+    }
+
+    //Función inicia el CDT (Aquí se definen los tiempos)
+    protected void startTimer(){
+        tiempoRestante=tiempoMilisegundos;
+        //countDownInterval: Tiempo que tarda en generarse* un nuevo pasaporte (puede no generarse si toca una posicion que esta ocupada)
+        CDT = new CountDownTimer(tiempoMilisegundos, intervalAparicionPas) {
+            @Override
+            public void onTick(long l) {
+
+                //Tiempo espera: tiempo en que desaparece el pasaporte
+                tiempoRestante-=intervalAparicionPas;
+                if(tiempoRestante>=tiempoDesaparecePas) {
+                    GeneraPas(tiempoDesaparecePas);
+                }
+
+            }
+            @Override
+            public void onFinish() {
 
             }
         }.start();
@@ -1821,6 +1844,10 @@ public class JuegoPasaportes extends AppCompatActivity {
 
             }
 
+            //guarda el combo maximo
+            if(combo>combomax){
+                combomax=combo;
+            }
 
             }
         }
@@ -1884,6 +1911,23 @@ public class JuegoPasaportes extends AppCompatActivity {
         ilegalesRechazados=0;
         sinAtender=0;
         combo=0;
+        combomax=0;
+
+        //Establecemos la dificultad
+
+        SharedPreferences opciones= getSharedPreferences("OPCIONESPASAPORTES",MODE_PRIVATE);
+        dificultad=opciones.getInt("DIFICULTAD",1);
+
+        if(dificultad==0){
+            intervalAparicionPas=2000;
+            tiempoDesaparecePas=3000;
+        }else if(dificultad==1){
+            intervalAparicionPas=1000;
+            tiempoDesaparecePas=1500;
+        }else if(dificultad==2){
+            intervalAparicionPas=500;
+            tiempoDesaparecePas=1000;
+        }
 
 
         //marco la tinta verde que es la seleccionada
@@ -1893,6 +1937,8 @@ public class JuegoPasaportes extends AppCompatActivity {
         //Ponemos el estado Global en 1 (Jugando) y iniciamos el contador
         estadoGlobal=1;
         startTimer();
+        startPantTimer();
+
 
 
 

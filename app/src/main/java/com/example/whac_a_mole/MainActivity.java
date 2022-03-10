@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,16 +23,17 @@ public class MainActivity extends AppCompatActivity {
 
     protected ImageView ivInfoPasaportes, ivInfoFacturacion;
     protected Spinner spDifPasaportes, spDifFacturacion;
-    protected String[] nivelesDificultad={"Facil","Intermedio","Difícil"};
+    protected String[] nivelesDificultad={"Fácil","Intermedio","Difícil"};
 
 
+    //Se muestra un mensaje al pulsar info
     public AlertDialog MensajeInfo(int modo){
 
         String mensaje,titulo;
 
         if(modo==1){
             titulo="Pasaportes";
-            mensaje="En este modo deberás visar correctamente los pasaportes. Hay 2 pasaportes validos y uno no válido. Para aceptar o rechazar los pasaportes puedes cambiar la tinta del sello entre rojo o verde";
+            mensaje="En este modo deberás visar correctamente los pasaportes. Hay 2 pasaportes válidos y uno no válido. Para aceptar o rechazar los pasaportes puedes cambiar la tinta del sello entre rojo y verde";
         }else{
             titulo="Facturación";
             mensaje="explicación facturación";
@@ -65,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         ivInfoPasaportes = findViewById(R.id.ivInfoPasaportes);
         spDifFacturacion = findViewById(R.id.spDificultadcheckin);
         spDifPasaportes = findViewById(R.id.spDificultadPasaportes);
+
+        SharedPreferences Preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
 
 
         MediaPlayer mpMusica= MediaPlayer.create (MainActivity.this, R.raw.menuinicio);
@@ -151,5 +157,55 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        spDifPasaportes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                SharedPreferences opcionesPasaporte = getSharedPreferences("OPCIONESPASAPORTES",MODE_PRIVATE);
+
+
+                //La dificultad va de 0(facil) a 2(dificil)
+                if(i==0){
+                    btJugar.setBackgroundColor(Color.rgb(45,126,110));
+                }else if(i==1){
+                    btJugar.setBackgroundColor(Color.rgb(200,150,50));
+                }else if(i==2){
+                    btJugar.setBackgroundColor(Color.rgb(200,50,50));
+                }
+                SharedPreferences.Editor editor = opcionesPasaporte.edit();
+                editor.putInt("DIFICULTAD",i);
+                editor.commit();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        spDifFacturacion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                SharedPreferences opcionesFacturacion = getSharedPreferences("OPCIONESFacturacion",MODE_PRIVATE);
+
+                if(i==0){
+                    btJugar2.setBackgroundColor(Color.rgb(45,126,110));
+                }else if(i==1){
+                    btJugar2.setBackgroundColor(Color.rgb(200,150,50));
+                }else if(i==2){
+                    btJugar2.setBackgroundColor(Color.rgb(200,50,50));
+                }
+                SharedPreferences.Editor editor = opcionesFacturacion.edit();
+                editor.putInt("DIFICULTAD",i);
+                editor.commit();
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 }
