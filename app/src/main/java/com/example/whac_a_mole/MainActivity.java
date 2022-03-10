@@ -10,10 +10,13 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.preference.EditTextPreference;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     protected ImageView ivInfoPasaportes, ivInfoFacturacion, ivOpciones, ivPodio;
     protected Spinner spDifPasaportes, spDifFacturacion;
     protected String[] nivelesDificultad={"Fácil","Intermedio","Difícil"};
+    protected EditText etNombre;
+    protected int aceptaSinNombre=0;
 
 
     //Se muestra un mensaje al pulsar info
@@ -56,6 +61,52 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    public AlertDialog MensajeAlertaNombre(int modo){
+
+        AlertDialog.Builder mi_builder = new AlertDialog.Builder
+                (MainActivity.this);
+        mi_builder.setTitle("Atención")
+                .setMessage("Si deja en blanco el campo nombre no aparecerá en los records")
+                .setPositiveButton("Entendido",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick (DialogInterface dialog,
+                                                 int which)
+                            {
+                                aceptaSinNombre=1;
+                                CountDownTimer espera = new CountDownTimer(500,100) {
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        if(modo==1){
+                                            btJugar.performClick();
+                                        }else if(modo==2){
+                                            btJugar2.performClick();
+                                        }
+
+                                    }
+                                } .start();
+
+                            }
+                        });
+       mi_builder.setNegativeButton("Volver",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick (DialogInterface dialog,
+                                         int which)
+                    {
+                        aceptaSinNombre=0;
+                        etNombre.requestFocus();
+                    }
+                });
+        return mi_builder.create();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
         spDifFacturacion = findViewById(R.id.spDificultadcheckin);
         spDifPasaportes = findViewById(R.id.spDificultadPasaportes);
         ivOpciones = findViewById(R.id.ivConfig);
-        ivPodio=findViewById(R.id.ivPodio);
+        ivPodio = findViewById(R.id.ivPodio);
+        etNombre = findViewById(R.id.etNombre);
 
 
 
@@ -92,53 +144,102 @@ public class MainActivity extends AppCompatActivity {
         btJugar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mpMusica.isPlaying()) {
+
+                //pasamos nombre
+                SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
+                SharedPreferences.Editor editor = records.edit();
+
+                if (etNombre.getText().length() > 0) {
+
+                    editor.putString("NOMBRE", String.valueOf(etNombre.getText()));
+                    aceptaSinNombre=1;
+                    editor.commit();
+
+                } else {
+
+                    if(aceptaSinNombre==0) {
+                        AlertDialog dialogoPas = MensajeAlertaNombre(1);
+                        dialogoPas.show();
+                        editor.putString("NOMBRE", "Jugador");
+                        editor.commit();
+                    }
+                }
+
+                if (aceptaSinNombre == 1) {
+
+
+                if (mpMusica.isPlaying()) {
                     mpMusica.stop();
                     mpMusica.release();
                 }
 
-                MediaPlayer mpMegafonia= MediaPlayer.create (MainActivity.this, R.raw.megafonia);
+                MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
                 mpMegafonia.setVolume(0.75f, 0.75f);
                 mpMegafonia.start();
 
-                while(mpMegafonia.isPlaying()){
-                //Se puede poner una animación
+                while (mpMegafonia.isPlaying()) {
+                    //Se puede poner una animación
                 }
 
-                    Intent mi_intent = new Intent(view.getContext(), JuegoPasaportes.class);
-                    startActivity(mi_intent);
-
+                Intent mi_intent = new Intent(view.getContext(), JuegoPasaportes.class);
+                startActivity(mi_intent);
 
 
                 mpMegafonia.stop();
                 mpMegafonia.release();
-
+            }
             }
         });
 
         btJugar2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mpMusica.isPlaying()) {
-                    mpMusica.stop();
-                    mpMusica.release();
+
+                //pasamos nombre
+                SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
+                SharedPreferences.Editor editor = records.edit();
+
+                if (etNombre.getText().length() > 0) {
+
+                    editor.putString("NOMBRE", String.valueOf(etNombre.getText()));
+                    aceptaSinNombre=1;
+                    editor.commit();
+
+                } else {
+
+                    if(aceptaSinNombre==0) {
+                        AlertDialog dialogoPas = MensajeAlertaNombre(2);
+                        dialogoPas.show();
+                        editor.putString("NOMBRE", "Jugador");
+                        editor.commit();
+                    }
+
                 }
 
-                MediaPlayer mpMegafonia= MediaPlayer.create (MainActivity.this, R.raw.megafonia);
-                mpMegafonia.setVolume(0.75f, 0.75f);
-                mpMegafonia.start();
+                if (aceptaSinNombre == 1) {
 
-                while(mpMegafonia.isPlaying()){
-                    //Se puede poner una animación
+
+
+                    if (mpMusica.isPlaying()) {
+                        mpMusica.stop();
+                        mpMusica.release();
+                    }
+
+                    MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
+                    mpMegafonia.setVolume(0.75f, 0.75f);
+                    mpMegafonia.start();
+
+                    while (mpMegafonia.isPlaying()) {
+                        //Se puede poner una animación
+                    }
+
+                    Intent mi_intent = new Intent(view.getContext(), JuegoCheckIn.class);
+                    startActivity(mi_intent);
+
+
+                    mpMegafonia.stop();
+                    mpMegafonia.release();
                 }
-
-                Intent mi_intent = new Intent(view.getContext(), JuegoCheckIn.class);
-                startActivity(mi_intent);
-
-
-
-                mpMegafonia.stop();
-                mpMegafonia.release();
             }
         });
 

@@ -103,7 +103,7 @@ public class JuegoPasaportes extends AppCompatActivity {
 
     }
 
-    //Funcion que muestra el resumen y el boton volver
+    //Funcion que muestra el resumen y el boton volver y pone records
     protected void MuestraResum(){
 
         ivPortafolio.setVisibility(View.VISIBLE);
@@ -141,6 +141,46 @@ public class JuegoPasaportes extends AppCompatActivity {
         tvPuntuacionResumen.setText("Puntuación total: "+Integer.toString(puntuacion)+" puntos "+fullCombo);
 
         tvRate.setText("Ratio: "+strVelMedia+" pasaportes/segundo");
+
+        if(clasificatoria) {
+
+            SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
+            SharedPreferences.Editor editor = records.edit();
+
+            //Comprueba 1
+            if (puntuacion > records.getInt("PUNTUACIONPAS1", -1)) {
+                editor.putString("NOMBREPAS1", records.getString("NOMBRE", ""));
+                editor.putInt("PUNTUACIONPAS1", puntuacion);
+                editor.putInt("COMBOPAS1", combomax);
+            } else if ((puntuacion == records.getInt("PUNTUACIONPAS1", -1)) && combomax > records.getInt("COMBOPAS1", -1)) {
+                editor.putString("NOMBREPAS1", records.getString("NOMBRE", ""));
+                editor.putInt("PUNTUACIONPAS1", puntuacion);
+                editor.putInt("COMBOPAS1", combomax);
+                //Comprueba 2
+            } else if (puntuacion > records.getInt("PUNTUACIONPAS2", -1)) {
+                editor.putString("NOMBREPAS2", records.getString("NOMBRE", ""));
+                editor.putInt("PUNTUACIONPAS2", puntuacion);
+                editor.putInt("COMBOPAS2", combomax);
+            } else if ((puntuacion == records.getInt("PUNTUACIONPAS2", -1)) && combomax > records.getInt("COMBOPAS2", -1)) {
+                editor.putString("NOMBREPAS2", records.getString("NOMBRE", ""));
+                editor.putInt("PUNTUACIONPAS2", puntuacion);
+                editor.putInt("COMBOPAS2", combomax);
+            }
+            //Comprueba 3
+            else if (puntuacion > records.getInt("PUNTUACIONPAS3", -1)) {
+                editor.putString("NOMBREPAS3", records.getString("NOMBRE", ""));
+                editor.putInt("PUNTUACIONPAS3", puntuacion);
+                editor.putInt("COMBOPAS3", combomax);
+            } else if ((puntuacion == records.getInt("PUNTUACIONPAS3", -1)) && combomax > records.getInt("COMBOPAS3", -1)) {
+                editor.putString("NOMBREPAS3", records.getString("NOMBRE", ""));
+                editor.putInt("PUNTUACIONPAS3", puntuacion);
+                editor.putInt("COMBOPAS3", combomax);
+            }
+            editor.commit();
+        }
+
+
+
 
     }
 
@@ -548,6 +588,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
 
                                 //segunda espera para que se vea el sello
                                 espera2[0] = new CountDownTimer(500, 100) {
@@ -594,6 +638,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[0]= new CountDownTimer(500, 100) {
@@ -642,6 +690,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[0] = new CountDownTimer(500, 100) {
@@ -693,6 +745,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
 
                                 //segunda espera para que se vea el sello
                                 espera2[1] = new CountDownTimer(500, 100) {
@@ -739,6 +795,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[1]= new CountDownTimer(500, 100) {
@@ -787,6 +847,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[1] = new CountDownTimer(500, 100) {
@@ -840,6 +904,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
 
                                 //segunda espera para que se vea el sello
                                 espera2[2] = new CountDownTimer(500, 100) {
@@ -886,6 +954,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[2]= new CountDownTimer(500, 100) {
@@ -934,6 +1006,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[2] = new CountDownTimer(500, 100) {
@@ -987,6 +1063,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
 
                                 //segunda espera para que se vea el sello
                                 espera2[3] = new CountDownTimer(500, 100) {
@@ -1033,6 +1113,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[3]= new CountDownTimer(500, 100) {
@@ -1081,6 +1165,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[3] = new CountDownTimer(500, 100) {
@@ -1136,6 +1224,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
 
                                 //segunda espera para que se vea el sello
                                 espera2[4] = new CountDownTimer(500, 100) {
@@ -1182,6 +1274,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[4]= new CountDownTimer(500, 100) {
@@ -1230,6 +1326,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[4] = new CountDownTimer(500, 100) {
@@ -1286,6 +1386,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
 
                                 //segunda espera para que se vea el sello
                                 espera2[5] = new CountDownTimer(500, 100) {
@@ -1332,6 +1436,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[5]= new CountDownTimer(500, 100) {
@@ -1380,6 +1488,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[5] = new CountDownTimer(500, 100) {
@@ -1434,6 +1546,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
 
                                 //segunda espera para que se vea el sello
                                 espera2[6] = new CountDownTimer(500, 100) {
@@ -1480,6 +1596,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[6]= new CountDownTimer(500, 100) {
@@ -1528,6 +1648,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[6] = new CountDownTimer(500, 100) {
@@ -1582,6 +1706,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
 
                                 //segunda espera para que se vea el sello
                                 espera2[7] = new CountDownTimer(500, 100) {
@@ -1628,6 +1756,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[7]= new CountDownTimer(500, 100) {
@@ -1676,6 +1808,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[7] = new CountDownTimer(500, 100) {
@@ -1729,6 +1865,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
 
                                 //segunda espera para que se vea el sello
                                 espera2[8] = new CountDownTimer(500, 100) {
@@ -1775,6 +1915,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idFallo, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[8]= new CountDownTimer(500, 100) {
@@ -1823,6 +1967,11 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     sp.play(idAcierto, 1, 1, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
+
+                                //guarda el combo maximo
+                                if(combo>combomax){
+                                    combomax=combo;
+                                }
                                 //segunda espera para que se vea el sello
 
                                 espera2[8] = new CountDownTimer(500, 100) {
@@ -1844,11 +1993,6 @@ public class JuegoPasaportes extends AppCompatActivity {
                     }
                     break;
 
-            }
-
-            //guarda el combo maximo
-            if(combo>combomax){
-                combomax=combo;
             }
 
             }
@@ -1923,7 +2067,7 @@ public class JuegoPasaportes extends AppCompatActivity {
 
         tiempoMilisegundos=(preferencias.getLong("TIEMPOPASAPORTES",60))*1000;
 
-        if(tiempoMilisegundos==60){
+        if(tiempoMilisegundos==60000){
             clasificatoria=true;
         }else{
             clasificatoria=false;

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -22,6 +23,49 @@ public class Opciones extends AppCompatActivity {
     protected Switch swMusica, swEfectos;
     protected EditText etTiempoPasaportes;
     protected Button btAplicar;
+
+    public AlertDialog MensajeBorrar(){
+
+        AlertDialog.Builder mi_builder = new AlertDialog.Builder
+                (Opciones.this);
+        mi_builder.setTitle("Atención")
+                .setMessage("Esta seguro de que quiere borrar todos los records")
+                .setPositiveButton("Si",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick (DialogInterface dialog,
+                                                 int which)
+                            {
+                                //borra los records
+                                SharedPreferences records = getSharedPreferences("RECORDS",MODE_PRIVATE);
+                                SharedPreferences.Editor editor = records.edit();
+
+                                editor.putString("NOMBREPAS1","");
+                                editor.putString("NOMBREPAS2","");
+                                editor.putString("NOMBREPAS3","");
+                                editor.putInt("PUNTUACIONPAS1",-1);
+                                editor.putInt("PUNTUACIONPAS2",-1);
+                                editor.putInt("PUNTUACIONPAS3",-1);
+                                editor.putInt("COMBOPAS1",-1);
+                                editor.putInt("COMBOPAS2",-1);
+                                editor.putInt("COMBOPAS3",-1);
+
+                                editor.commit();
+
+                            }
+                        });
+        mi_builder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick (DialogInterface dialog,
+                                         int which)
+                    {
+                        //no hace nada
+                    }
+                });
+        return mi_builder.create();
+
+    }
 
     public AlertDialog MensajeInfo(){
         //mostramos dialogo
@@ -67,7 +111,14 @@ public class Opciones extends AppCompatActivity {
 
 
 
+        ivBorrarRecords.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog dialogoPas = MensajeBorrar();
+                dialogoPas.show();
 
+            }
+        });
 
         swMusica.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -119,9 +170,7 @@ public class Opciones extends AppCompatActivity {
         ivSalir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
-                mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(mi_intent);
+
                 finish();
             }
         });
