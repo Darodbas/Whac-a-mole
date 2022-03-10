@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected Button btJugar, btJugar2;
 
-    protected ImageView ivInfoPasaportes, ivInfoFacturacion, ivOpciones;
+    protected ImageView ivInfoPasaportes, ivInfoFacturacion, ivOpciones, ivPodio;
     protected Spinner spDifPasaportes, spDifFacturacion;
     protected String[] nivelesDificultad={"Fácil","Intermedio","Difícil"};
 
@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
         spDifFacturacion = findViewById(R.id.spDificultadcheckin);
         spDifPasaportes = findViewById(R.id.spDificultadPasaportes);
         ivOpciones = findViewById(R.id.ivConfig);
+        ivPodio=findViewById(R.id.ivPodio);
 
-        SharedPreferences Preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
 
 
         MediaPlayer mpMusica= MediaPlayer.create (MainActivity.this, R.raw.menuinicio);
@@ -149,6 +149,14 @@ public class MainActivity extends AppCompatActivity {
                 Intent mi_intent = new Intent(view.getContext(), Opciones.class);
                 startActivity(mi_intent);
 
+            }
+        });
+
+        ivPodio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mi_intent = new Intent(view.getContext(), Records.class);
+                startActivity(mi_intent);
             }
         });
 

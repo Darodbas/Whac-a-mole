@@ -120,7 +120,7 @@ public class Opciones extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
-                //mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(mi_intent);
                 finish();
             }

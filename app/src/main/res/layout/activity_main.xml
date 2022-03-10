@@ -174,4 +174,14 @@
         app:layout_constraintTop_toTopOf="@+id/guideline45"
         app:srcCompat="@drawable/configavion" />
 
+    <ImageView
+        android:id="@+id/ivPodio"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline46"
+        app:layout_constraintEnd_toStartOf="@+id/guideline41"
+        app:layout_constraintStart_toStartOf="@+id/guideline42"
+        app:layout_constraintTop_toTopOf="@+id/guideline45"
+        app:srcCompat="@drawable/trofeo" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

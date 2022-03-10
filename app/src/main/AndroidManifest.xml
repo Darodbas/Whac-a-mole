@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Whacamole">
         <activity
+            android:name=".Records"
+            android:exported="false" />
+        <activity
             android:name=".Opciones"
             android:exported="false" />
         <activity
