@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -60,6 +61,8 @@ public class JuegoPasaportes extends AppCompatActivity {
     protected int combomax;
     protected int tintaAlPulsar;
     protected int dificultad;
+    protected int t;//solo se utiliza en la cuenta atras
+    protected float volume;
 
     protected boolean clasificatoria;
 
@@ -74,6 +77,8 @@ public class JuegoPasaportes extends AppCompatActivity {
     protected TextView tvResumen;
     protected TextView tvSinAtender;
     protected TextView tvRate;
+
+    protected  MediaPlayer mpMusica;
 
     //Funcion que oculta todos los pasaportes
     protected  void OcultaPasyResum(){
@@ -221,14 +226,56 @@ public class JuegoPasaportes extends AppCompatActivity {
 
     }
 
-    //Funcion timer Por pantalla
+    //Cuenta atras al empezar
+    protected void CuentaAtras(){
+
+        t=3;
+        tvCountdown.setTextColor(Color.GREEN);
+        CountDownTimer cuentaAtras = new CountDownTimer(4000,1000) {
+            @Override
+            public void onTick(long l) {
+
+                if(t>0){
+                    tvCountdown.setText(Integer.toString(t));
+                    t--;
+                }else{
+                    tvCountdown.setText("¡YA!");
+                }
+
+            }
+
+            @Override
+            public void onFinish() {
+
+//marco la tinta verde que es la seleccionada
+                ivTintaVerde.setScaleX(1.3F);
+                ivTintaVerde.setScaleY(1.3F);
+                estadoGlobal=1;
+                startTimer();
+                startPantTimer();
+                tvCountdown.setTextColor(Color.rgb(166,237,255));
+                SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
+
+                if(preferencias.getBoolean("MUSICA",false)){
+                    mpMusica.setVolume(0.05f, 0.05f);
+                    mpMusica.setLooping(true);
+                    mpMusica.start();
+                }
+
+            }
+        }.start();
+
+
+    }
+
+    //Funcion timer Por pantalla los intervalos siempre son 1s
     protected void startPantTimer(){
         tiempoRestante=tiempoMilisegundos;
         //countDownInterval: Tiempo que tarda en generarse* un nuevo pasaporte (puede no generarse si toca una posicion que esta ocupada)
         CDTpant = new CountDownTimer(tiempoMilisegundos, 1000) {
             @Override
             public void onTick(long l) {
-                tvCountdown.setText(String.format("%2d",l/1000));
+                tvCountdown.setText(String.format("%2d",(l+1000)/1000));
                 }
 
 
@@ -238,7 +285,8 @@ public class JuegoPasaportes extends AppCompatActivity {
                 estadoGlobal=0;
                 tvCountdown.setText("0");
                 sp.play(idFinalPartida, 1, 1, 1, 0, 1);
-
+                mpMusica.stop();
+                mpMusica.release();
                 OcultaPasyResum();
                 MuestraResum();
 
@@ -258,7 +306,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                 //Tiempo espera: tiempo en que desaparece el pasaporte
                 tiempoRestante-=intervalAparicionPas;
                 if(tiempoRestante>=tiempoDesaparecePas) {
-                    GeneraPas(tiempoDesaparecePas);
+                    GeneraPas((long) (tiempoDesaparecePas+tiempoDesaparecePas*Math.random()));
                 }
 
             }
@@ -601,7 +649,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[0]=4;
                         //pone la estampa
                         ivPas1.setImageResource(R.drawable.pas1st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[0] = new CountDownTimer(100, 100) {
                             @Override
@@ -616,13 +664,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion ++;
                                     combo++;
                                     legalesAceptados++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas1.setImageResource(R.drawable.pas1nv);
                                     puntuacion --;
                                     combo=0;
                                     legalesRechazados++;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -651,7 +699,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[0]=4;
                         //pone la estampa
                         ivPas1.setImageResource(R.drawable.pas2st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[0] = new CountDownTimer(100, 100) {
                             @Override
@@ -666,13 +714,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion ++;
                                     combo++;
                                     legalesAceptados++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume,volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas1.setImageResource(R.drawable.pas2nv);
                                     puntuacion --;
                                     combo=0;
                                     legalesRechazados++;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -702,7 +750,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[0]=4;
                         //pone la estampa
                         ivPas1.setImageResource(R.drawable.pas3st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[0] = new CountDownTimer(100, 100) {
@@ -718,13 +766,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion --;
                                     combo=0;
                                     ilegalesAceptados++;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas1.setImageResource(R.drawable.pas3nv);
                                     puntuacion ++;
                                     combo++;
                                     ilegalesRechazados++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -758,7 +806,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[1]=4;
                         //pone la estampa
                         ivPas2.setImageResource(R.drawable.pas1st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[1] = new CountDownTimer(100, 100) {
                             @Override
@@ -773,13 +821,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion ++;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas2.setImageResource(R.drawable.pas1nv);
                                     puntuacion --;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -808,7 +856,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[1]=4;
                         //pone la estampa
                         ivPas2.setImageResource(R.drawable.pas2st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[1] = new CountDownTimer(100, 100) {
                             @Override
@@ -823,13 +871,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion ++;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas2.setImageResource(R.drawable.pas2nv);
                                     puntuacion --;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -859,7 +907,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[1]=4;
                         //pone la estampa
                         ivPas2.setImageResource(R.drawable.pas3st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[1] = new CountDownTimer(100, 100) {
@@ -875,13 +923,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion --;
                                     ilegalesAceptados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas2.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
                                     ilegalesRechazados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -917,7 +965,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[2]=4;
                         //pone la estampa
                         ivPas3.setImageResource(R.drawable.pas1st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[2] = new CountDownTimer(100, 100) {
                             @Override
@@ -932,13 +980,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas3.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -967,7 +1015,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[2]=4;
                         //pone la estampa
                         ivPas3.setImageResource(R.drawable.pas2st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[2] = new CountDownTimer(100, 100) {
                             @Override
@@ -982,13 +1030,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume,volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas3.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1018,7 +1066,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[2]=4;
                         //pone la estampa
                         ivPas3.setImageResource(R.drawable.pas3st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[2] = new CountDownTimer(100, 100) {
@@ -1034,13 +1082,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion -= 1;
                                     ilegalesAceptados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas3.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
                                     ilegalesRechazados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1076,7 +1124,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[3]=4;
                         //pone la estampa
                         ivPas4.setImageResource(R.drawable.pas1st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[3] = new CountDownTimer(100, 100) {
                             @Override
@@ -1091,13 +1139,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas4.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1126,7 +1174,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[3]=4;
                         //pone la estampa
                         ivPas4.setImageResource(R.drawable.pas2st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[3] = new CountDownTimer(100, 100) {
                             @Override
@@ -1141,13 +1189,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume,volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas4.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1177,7 +1225,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[3]=4;
                         //pone la estampa
                         ivPas4.setImageResource(R.drawable.pas3st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[3] = new CountDownTimer(100, 100) {
@@ -1193,13 +1241,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion -= 1;
                                     ilegalesAceptados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas4.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
                                     ilegalesRechazados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1237,7 +1285,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[4]=4;
                         //pone la estampa
                         ivPas5.setImageResource(R.drawable.pas1st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[4] = new CountDownTimer(100, 100) {
                             @Override
@@ -1252,13 +1300,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas5.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1287,7 +1335,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[4]=4;
                         //pone la estampa
                         ivPas5.setImageResource(R.drawable.pas2st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[4] = new CountDownTimer(100, 100) {
                             @Override
@@ -1302,13 +1350,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas5.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1338,7 +1386,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[4]=4;
                         //pone la estampa
                         ivPas5.setImageResource(R.drawable.pas3st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[4] = new CountDownTimer(100, 100) {
@@ -1354,13 +1402,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion -= 1;
                                     ilegalesAceptados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas5.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
                                     ilegalesRechazados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1399,7 +1447,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[5]=4;
                         //pone la estampa
                         ivPas6.setImageResource(R.drawable.pas1st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[5] = new CountDownTimer(100, 100) {
                             @Override
@@ -1414,13 +1462,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas6.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1449,7 +1497,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[5]=4;
                         //pone la estampa
                         ivPas6.setImageResource(R.drawable.pas2st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[5] = new CountDownTimer(100, 100) {
                             @Override
@@ -1464,13 +1512,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas6.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1500,7 +1548,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[5]=4;
                         //pone la estampa
                         ivPas6.setImageResource(R.drawable.pas3st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[5] = new CountDownTimer(100, 100) {
@@ -1516,13 +1564,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion -= 1;
                                     ilegalesAceptados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas6.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
                                     ilegalesRechazados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1559,7 +1607,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[6]=4;
                         //pone la estampa
                         ivPas7.setImageResource(R.drawable.pas1st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[6] = new CountDownTimer(100, 100) {
                             @Override
@@ -1574,13 +1622,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas7.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1609,7 +1657,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[6]=4;
                         //pone la estampa
                         ivPas7.setImageResource(R.drawable.pas2st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[6] = new CountDownTimer(100, 100) {
                             @Override
@@ -1624,13 +1672,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas7.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1660,7 +1708,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[6]=4;
                         //pone la estampa
                         ivPas7.setImageResource(R.drawable.pas3st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[6] = new CountDownTimer(100, 100) {
@@ -1676,13 +1724,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion -= 1;
                                     ilegalesAceptados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas7.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
                                     ilegalesRechazados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1719,7 +1767,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[7]=4;
                         //pone la estampa
                         ivPas8.setImageResource(R.drawable.pas1st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[7] = new CountDownTimer(100, 100) {
                             @Override
@@ -1734,13 +1782,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas8.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1769,7 +1817,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[7]=4;
                         //pone la estampa
                         ivPas8.setImageResource(R.drawable.pas2st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[7] = new CountDownTimer(100, 100) {
                             @Override
@@ -1784,13 +1832,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas8.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1820,7 +1868,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[7]=4;
                         //pone la estampa
                         ivPas8.setImageResource(R.drawable.pas3st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[7] = new CountDownTimer(100, 100) {
@@ -1836,13 +1884,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion -= 1;
                                     ilegalesAceptados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas8.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
                                     ilegalesRechazados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1878,7 +1926,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[8]=4;
                         //pone la estampa
                         ivPas9.setImageResource(R.drawable.pas1st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[8] = new CountDownTimer(100, 100) {
                             @Override
@@ -1893,13 +1941,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas9.setImageResource(R.drawable.pas1nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1928,7 +1976,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[8]=4;
                         //pone la estampa
                         ivPas9.setImageResource(R.drawable.pas2st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
                         espera1[8] = new CountDownTimer(100, 100) {
                             @Override
@@ -1943,13 +1991,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion += 1;
                                     legalesAceptados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas9.setImageResource(R.drawable.pas2nv);
                                     puntuacion -= 1;
                                     legalesRechazados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
                                 //guarda el combo maximo
@@ -1979,7 +2027,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         estados[8]=4;
                         //pone la estampa
                         ivPas9.setImageResource(R.drawable.pas3st);
-                        sp.play(idStamp, 1, 1, 1, 0, 1);
+                        sp.play(idStamp, volume, volume, 1, 0, 1);
                         //espera 0.2s para que se vea la estampa
 
                         espera1[8] = new CountDownTimer(100, 100) {
@@ -1995,13 +2043,13 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     puntuacion -= 1;
                                     ilegalesAceptados++;
                                     combo=0;
-                                    sp.play(idFallo, 1, 1, 1, 0, 1);
+                                    sp.play(idFallo, volume, volume, 1, 0, 1);
                                 } else if (tintaAlPulsar == 2) {
                                     ivPas9.setImageResource(R.drawable.pas3nv);
                                     puntuacion += 1;
                                     ilegalesRechazados++;
                                     combo++;
-                                    sp.play(idAcierto, 1, 1, 1, 0, 1);
+                                    sp.play(idAcierto, volume, volume, 1, 0, 1);
                                 }
                                 ActualizaPuntuacion();
 
@@ -2069,6 +2117,9 @@ public class JuegoPasaportes extends AppCompatActivity {
         tvRate=findViewById(R.id.tvRate);
         tvSinAtender=findViewById(R.id.tvSinAtender);
 
+        SharedPreferences opciones= getSharedPreferences("OPCIONESPASAPORTES",MODE_PRIVATE);
+        SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
+
 
 
         //sonidos
@@ -2077,10 +2128,21 @@ public class JuegoPasaportes extends AppCompatActivity {
                 AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
         sp = new SoundPool.Builder().setMaxStreams(5).setAudioAttributes(audioAttributes).build();
 
+        if(preferencias.getBoolean("EFECTOS",true)){
+            volume=1;
+        }else{
+            volume= 0.0F;
+        }
+
         idStamp= sp.load(this,R.raw.stamp,1);
         idAcierto= sp.load(this,R.raw.acierto,1);
         idFallo= sp.load(this,R.raw.fallo,1);
         idFinalPartida= sp.load(this,R.raw.finalpartida,1);
+
+
+        mpMusica= MediaPlayer.create (JuegoPasaportes.this, R.raw.musicajuegos);
+
+
 
 
 
@@ -2098,8 +2160,6 @@ public class JuegoPasaportes extends AppCompatActivity {
 
         //Establecemos la dificultad y preferencias
 
-        SharedPreferences opciones= getSharedPreferences("OPCIONESPASAPORTES",MODE_PRIVATE);
-        SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
         dificultad=opciones.getInt("DIFICULTAD",1);
 
         tiempoMilisegundos=(preferencias.getLong("TIEMPOPASAPORTES",60))*1000;
@@ -2111,25 +2171,26 @@ public class JuegoPasaportes extends AppCompatActivity {
         }
 
         if(dificultad==0){
-            intervalAparicionPas=2000;
-            tiempoDesaparecePas=3000;
+            intervalAparicionPas=1300;
+            tiempoDesaparecePas=1500;
         }else if(dificultad==1){
             intervalAparicionPas=1000;
-            tiempoDesaparecePas=1500;
+            tiempoDesaparecePas=1000;
         }else if(dificultad==2){
             intervalAparicionPas=500;
-            tiempoDesaparecePas=1000;
+            tiempoDesaparecePas=800;
         }
 
 
-        //marco la tinta verde que es la seleccionada
-        ivTintaVerde.setScaleX(1.3F);
-        ivTintaVerde.setScaleY(1.3F);
+
+        //cuenta atras y empeza el juego
+        CuentaAtras();
+
 
         //Ponemos el estado Global en 1 (Jugando) y iniciamos el contador
-        estadoGlobal=1;
+        /*estadoGlobal=1;
         startTimer();
-        startPantTimer();
+        startPantTimer();*/
 
 
 
@@ -2233,7 +2294,7 @@ public class JuegoPasaportes extends AppCompatActivity {
         public void onClick(View view) {
 
             MediaPlayer mpMegafoniaSalir= MediaPlayer.create (JuegoPasaportes.this, R.raw.megafoniasalir);
-                mpMegafoniaSalir.setVolume(0.75f, 0.75f);
+                mpMegafoniaSalir.setVolume(0.05f, 0.05f);
                 mpMegafoniaSalir.setLooping(false);
                 mpMegafoniaSalir.start();
 
@@ -2241,6 +2302,8 @@ public class JuegoPasaportes extends AppCompatActivity {
         while(mpMegafoniaSalir.isPlaying()){
         //Se puede poner una animación
         }
+            mpMegafoniaSalir.stop();
+            mpMegafoniaSalir.release();
             Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
             mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(mi_intent);

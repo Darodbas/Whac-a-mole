@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         MediaPlayer mpMusica= MediaPlayer.create (MainActivity.this, R.raw.menuinicio);
-        mpMusica.setVolume(0.75f, 0.75f);
+        mpMusica.setVolume(0.05f, 0.05f);
         mpMusica.setLooping(true);
         mpMusica.start();
 
@@ -138,7 +138,9 @@ public class MainActivity extends AppCompatActivity {
         spDifPasaportes.setAdapter(mi_adaptador);
         spDifFacturacion.setAdapter(mi_adaptador);
 
-
+        //ponemos el Nombre anterior si hay
+        SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
+        etNombre.setText(records.getString("NOMBRE",""));
 
 
         btJugar.setOnClickListener(new View.OnClickListener() {
@@ -174,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
-                mpMegafonia.setVolume(0.75f, 0.75f);
+                mpMegafonia.setVolume(0.05f, 0.05f);
                 mpMegafonia.start();
 
                 while (mpMegafonia.isPlaying()) {
@@ -226,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
-                    mpMegafonia.setVolume(0.75f, 0.75f);
+                    mpMegafonia.setVolume(0.20f, 0.20f);
                     mpMegafonia.start();
 
                     while (mpMegafonia.isPlaying()) {
