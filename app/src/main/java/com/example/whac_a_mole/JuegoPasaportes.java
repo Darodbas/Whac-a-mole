@@ -149,19 +149,56 @@ public class JuegoPasaportes extends AppCompatActivity {
 
             //Comprueba 1
             if (puntuacion > records.getInt("PUNTUACIONPAS1", -1)) {
+
+                //2-->3
+                editor.putString("NOMBREPAS3", records.getString("NOMBREPAS2", ""));
+                editor.putInt("PUNTUACIONPAS3", records.getInt("PUNTUACIONPAS2", -1));
+                editor.putInt("COMBOPAS3", records.getInt("COMBOPAS2", -1));
+
+                //1-->2
+                editor.putString("NOMBREPAS2", records.getString("NOMBREPAS1", ""));
+                editor.putInt("PUNTUACIONPAS2", records.getInt("PUNTUACIONPAS1", -1));
+                editor.putInt("COMBOPAS2", records.getInt("COMBOPAS1", -1));
+
+
                 editor.putString("NOMBREPAS1", records.getString("NOMBRE", ""));
                 editor.putInt("PUNTUACIONPAS1", puntuacion);
                 editor.putInt("COMBOPAS1", combomax);
+
             } else if ((puntuacion == records.getInt("PUNTUACIONPAS1", -1)) && combomax > records.getInt("COMBOPAS1", -1)) {
+
+                //2-->3
+                editor.putString("NOMBREPAS3", records.getString("NOMBREPAS2", ""));
+                editor.putInt("PUNTUACIONPAS3", records.getInt("PUNTUACIONPAS2", -1));
+                editor.putInt("COMBOPAS3", records.getInt("COMBOPAS2", -1));
+
+                //1-->2
+                editor.putString("NOMBREPAS2", records.getString("NOMBREPAS1", ""));
+                editor.putInt("PUNTUACIONPAS2", records.getInt("PUNTUACIONPAS1", -1));
+                editor.putInt("COMBOPAS2", records.getInt("COMBOPAS1", -1));
+
                 editor.putString("NOMBREPAS1", records.getString("NOMBRE", ""));
                 editor.putInt("PUNTUACIONPAS1", puntuacion);
                 editor.putInt("COMBOPAS1", combomax);
+
                 //Comprueba 2
             } else if (puntuacion > records.getInt("PUNTUACIONPAS2", -1)) {
+
+                //2-->3
+                editor.putString("NOMBREPAS3", records.getString("NOMBREPAS2", ""));
+                editor.putInt("PUNTUACIONPAS3", records.getInt("PUNTUACIONPAS2", -1));
+                editor.putInt("COMBOPAS3", records.getInt("COMBOPAS2", -1));
+
                 editor.putString("NOMBREPAS2", records.getString("NOMBRE", ""));
                 editor.putInt("PUNTUACIONPAS2", puntuacion);
                 editor.putInt("COMBOPAS2", combomax);
+
             } else if ((puntuacion == records.getInt("PUNTUACIONPAS2", -1)) && combomax > records.getInt("COMBOPAS2", -1)) {
+                //2-->3
+                editor.putString("NOMBREPAS3", records.getString("NOMBREPAS2", ""));
+                editor.putInt("PUNTUACIONPAS3", records.getInt("PUNTUACIONPAS2", -1));
+                editor.putInt("COMBOPAS3", records.getInt("COMBOPAS2", -1));
+
                 editor.putString("NOMBREPAS2", records.getString("NOMBRE", ""));
                 editor.putInt("PUNTUACIONPAS2", puntuacion);
                 editor.putInt("COMBOPAS2", combomax);
