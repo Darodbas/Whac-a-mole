@@ -405,7 +405,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                         public void onFinish() {
                             // Código cuando finalice el timer vuelve invisible el pasaporte y pone el estado de la mesa a 0 si no le han dado antes
                             if (estados[1] != 0 && estados[1] != 4) {
-                                estados[0] = 0;
+                                estados[1] = 0;
                                 ivPas2.setVisibility(View.INVISIBLE);
                                 sinAtender++;
                                 combo=0;
