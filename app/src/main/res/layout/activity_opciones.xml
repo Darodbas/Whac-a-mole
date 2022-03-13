@@ -10,7 +10,7 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2569FFE8"
+        android:background="#484CF9FF"
         app:layout_constraintBottom_toTopOf="@+id/guideline90"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,7 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2569FFE8"
+        android:background="#484CF9FF"
         app:layout_constraintBottom_toTopOf="@+id/guideline51"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +32,7 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2569FFE8"
+        android:background="#484CF9FF"
         app:layout_constraintBottom_toTopOf="@+id/guideline55"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2569FFE8"
+        android:background="#484CF9FF"
         app:layout_constraintBottom_toTopOf="@+id/guideline53"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -244,8 +244,8 @@
 
     <ImageView
         android:id="@+id/ivBorrarRecords"
-        android:layout_width="76dp"
-        android:layout_height="61dp"
+        android:layout_width="71dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline55"
         app:layout_constraintEnd_toStartOf="@+id/guideline89"
         app:layout_constraintStart_toStartOf="@+id/guideline49"

@@ -19,14 +19,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     protected Button btJugar, btJugar2;
+    protected TextView tvColorDificultad;
 
-    protected ImageView ivInfoPasaportes, ivInfoFacturacion, ivOpciones, ivPodio;
+    protected ImageView ivInfoPasaportes, ivInfoFacturacion, ivOpciones, ivPodio,ivSalirPrincipal;
     protected Spinner spDifPasaportes, spDifFacturacion;
-    protected String[] nivelesDificultad={"Fácil","Intermedio","Difícil"};
+    protected String[] nivelesDificultad={"Fácil","Medio","Difícil"};
     protected EditText etNombre;
     protected int aceptaSinNombre=0;
 
@@ -107,6 +109,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onBackPressed(){
+
+        ivSalirPrincipal.performClick();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
         ivOpciones = findViewById(R.id.ivConfig);
         ivPodio = findViewById(R.id.ivPodio);
         etNombre = findViewById(R.id.etNombre);
+        ivSalirPrincipal = findViewById(R.id.ivSalirPrincipal);
+        tvColorDificultad=findViewById(R.id.tvColorDificultad);
 
 
 
@@ -289,11 +299,11 @@ public class MainActivity extends AppCompatActivity {
 
                 //La dificultad va de 0(facil) a 2(dificil)
                 if(i==0){
-                    btJugar.setBackgroundColor(Color.rgb(45,126,110));
+                    tvColorDificultad.setBackgroundColor(Color.argb(70,35,182,166));
                 }else if(i==1){
-                    btJugar.setBackgroundColor(Color.rgb(200,150,50));
+                    tvColorDificultad.setBackgroundColor(Color.argb(70,255,241,0));
                 }else if(i==2){
-                    btJugar.setBackgroundColor(Color.rgb(200,50,50));
+                    tvColorDificultad.setBackgroundColor(Color.argb(70,237,81,81));
                 }
                 SharedPreferences.Editor editor = opcionesPasaporte.edit();
                 editor.putInt("DIFICULTAD",i);
@@ -306,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        spDifFacturacion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*spDifFacturacion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 SharedPreferences opcionesFacturacion = getSharedPreferences("OPCIONESFacturacion",MODE_PRIVATE);
@@ -327,6 +337,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        */
+
+        ivSalirPrincipal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (mpMusica.isPlaying()) {
+                    mpMusica.stop();
+                    mpMusica.release();
+                }
+                finish();
 
             }
         });

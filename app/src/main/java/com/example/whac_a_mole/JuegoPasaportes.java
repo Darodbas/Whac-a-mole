@@ -20,6 +20,7 @@ public class JuegoPasaportes extends AppCompatActivity {
 
     CountDownTimer CDT;
     CountDownTimer CDTpant;
+    CountDownTimer cuentaAtras;
     CountDownTimer[] tiempoEspera= new CountDownTimer[9];
     long tiempoMilisegundos =60000;
     long intervalAparicionPas;
@@ -30,7 +31,7 @@ public class JuegoPasaportes extends AppCompatActivity {
     //protected SharedPreferences opcionesPasaportes= getSharedPreferences("OPCIONESPASAPORTES",MODE_PRIVATE);
 
     protected SoundPool sp;
-    protected int idAcierto,idFallo,idStamp,idFinalPartida;
+    protected int idAcierto,idFallo,idStamp,idFinalPartida,idBeep,idFinalBeep;
 
 
     protected ImageView ivPas1;
@@ -230,16 +231,19 @@ public class JuegoPasaportes extends AppCompatActivity {
     protected void CuentaAtras(){
 
         t=3;
+
         tvCountdown.setTextColor(Color.GREEN);
-        CountDownTimer cuentaAtras = new CountDownTimer(4000,1000) {
+        cuentaAtras = new CountDownTimer(4000,1000) {
             @Override
             public void onTick(long l) {
 
                 if(t>0){
                     tvCountdown.setText(Integer.toString(t));
+                    sp.play(idBeep, volume, volume, 1, 0, 1);
                     t--;
                 }else{
                     tvCountdown.setText("¡YA!");
+                    sp.play(idFinalBeep, volume, volume, 1, 0, 1);
                 }
 
             }
@@ -2083,6 +2087,14 @@ public class JuegoPasaportes extends AppCompatActivity {
             }
         }
 
+        //si se pulsa atras se cierra y se limpia
+
+     public void onBackPressed(){
+
+         btVolver.performClick();
+
+     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -2138,6 +2150,9 @@ public class JuegoPasaportes extends AppCompatActivity {
         idAcierto= sp.load(this,R.raw.acierto,1);
         idFallo= sp.load(this,R.raw.fallo,1);
         idFinalPartida= sp.load(this,R.raw.finalpartida,1);
+        idBeep = sp.load(this,R.raw.beep,1);
+        idFinalBeep= sp.load(this,R.raw.finalbeep,1);
+
 
 
         mpMusica= MediaPlayer.create (JuegoPasaportes.this, R.raw.musicajuegos);
@@ -2291,19 +2306,30 @@ public class JuegoPasaportes extends AppCompatActivity {
     btVolver.setOnClickListener(new View.OnClickListener() {
         @Override
 
+
         public void onClick(View view) {
 
-            MediaPlayer mpMegafoniaSalir= MediaPlayer.create (JuegoPasaportes.this, R.raw.megafoniasalir);
+            if(btVolver.getVisibility()==View.VISIBLE) {
+                MediaPlayer mpMegafoniaSalir = MediaPlayer.create(JuegoPasaportes.this, R.raw.megafoniasalir);
                 mpMegafoniaSalir.setVolume(0.05f, 0.05f);
                 mpMegafoniaSalir.setLooping(false);
                 mpMegafoniaSalir.start();
 
 
-        while(mpMegafoniaSalir.isPlaying()){
-        //Se puede poner una animación
-        }
-            mpMegafoniaSalir.stop();
-            mpMegafoniaSalir.release();
+                while (mpMegafoniaSalir.isPlaying()) {
+                    //Se puede poner una animación
+                }
+                mpMegafoniaSalir.stop();
+                mpMegafoniaSalir.release();
+
+            }
+            //paramos todos los contadores y musicas
+            mpMusica.stop();
+            mpMusica.release();
+            CDT.cancel();
+            CDTpant.cancel();
+            cuentaAtras.cancel();
+
             Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
             mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(mi_intent);
