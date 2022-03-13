@@ -260,7 +260,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                 tvCountdown.setTextColor(Color.rgb(166,237,255));
                 SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
 
-                if(preferencias.getBoolean("MUSICA",false)){
+                if(preferencias.getBoolean("MUSICA",true)){
                     mpMusica.setVolume(0.05f, 0.05f);
                     mpMusica.setLooping(true);
                     mpMusica.start();
