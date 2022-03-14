@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     protected String[] nivelesDificultad={"Fácil","Medio","Difícil"};
     protected EditText etNombre;
     protected int aceptaSinNombre=0,musicaSonando=1;
+    protected boolean btpas,btfac;
 
 
     //Se muestra un mensaje al pulsar info
@@ -136,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
         tvColorDificultad=findViewById(R.id.tvColorDificultad);
         ivSpeaker=findViewById(R.id.ivSpeaker);
 
+        btpas=false;
+        btfac=false;
+
 
 
         MediaPlayer mpMusica= MediaPlayer.create (MainActivity.this, R.raw.menuinicio);
@@ -158,102 +162,143 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //pasamos nombre
-                SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
-                SharedPreferences.Editor editor = records.edit();
 
-                if (etNombre.getText().length() > 0) {
 
-                    editor.putString("NOMBRE", String.valueOf(etNombre.getText()));
-                    aceptaSinNombre=1;
-                    editor.commit();
 
-                } else {
+                    //pasamos nombre
+                    SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
+                    SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = records.edit();
 
-                    if(aceptaSinNombre==0) {
-                        AlertDialog dialogoPas = MensajeAlertaNombre(1);
-                        dialogoPas.show();
-                        editor.putString("NOMBRE", "Jugador");
+                    if (etNombre.getText().length() > 0) {
+
+                        editor.putString("NOMBRE", String.valueOf(etNombre.getText()));
+                        aceptaSinNombre = 1;
                         editor.commit();
+
+                    } else {
+
+                        if (aceptaSinNombre == 0) {
+                            AlertDialog dialogoPas = MensajeAlertaNombre(1);
+                            dialogoPas.show();
+                            editor.putString("NOMBRE", "Jugador");
+                            editor.commit();
+                        }
+                    }
+
+                    if (aceptaSinNombre == 1) {
+
+
+                        if (mpMusica.isPlaying()) {
+                            mpMusica.stop();
+                            mpMusica.release();
+                        }
+
+                        //Solo si en preferencias esta habilitado
+                        if (preferencias.getBoolean("EFECTOS", true)) {
+
+                            MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
+                            mpMegafonia.setVolume(0.01f, 0.01f);
+                            mpMegafonia.start();
+
+                            CountDownTimer esperaMegafono = new CountDownTimer(2000,1000) {
+                                @Override
+                                public void onTick(long l) {
+
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    mpMegafonia.stop();
+                                    mpMegafonia.release();
+                                    Intent mi_intent = new Intent(view.getContext(), JuegoPasaportes.class);
+                                    startActivity(mi_intent);
+                                }
+                            }.start();
+
+
+                        }else{
+                            Intent mi_intent = new Intent(view.getContext(), JuegoPasaportes.class);
+                            startActivity(mi_intent);
+                        }
+
+
+
+
                     }
                 }
 
-                if (aceptaSinNombre == 1) {
-
-
-                if (mpMusica.isPlaying()) {
-                    mpMusica.stop();
-                    mpMusica.release();
-                }
-
-                MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
-                mpMegafonia.setVolume(0.05f, 0.05f);
-                mpMegafonia.start();
-
-                while (mpMegafonia.isPlaying()) {
-                    //Se puede poner una animación
-                }
-
-                Intent mi_intent = new Intent(view.getContext(), JuegoPasaportes.class);
-                startActivity(mi_intent);
-
-
-                mpMegafonia.stop();
-                mpMegafonia.release();
-            }
-            }
         });
 
         btJugar2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //pasamos nombre
-                SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
-                SharedPreferences.Editor editor = records.edit();
 
-                if (etNombre.getText().length() > 0) {
 
-                    editor.putString("NOMBRE", String.valueOf(etNombre.getText()));
-                    aceptaSinNombre=1;
-                    editor.commit();
 
-                } else {
+                    //pasamos nombre
+                    SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
+                    SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = records.edit();
 
-                    if(aceptaSinNombre==0) {
-                        AlertDialog dialogoPas = MensajeAlertaNombre(2);
-                        dialogoPas.show();
-                        editor.putString("NOMBRE", "Jugador");
+                    if (etNombre.getText().length() > 0) {
+
+                        editor.putString("NOMBRE", String.valueOf(etNombre.getText()));
+                        aceptaSinNombre = 1;
                         editor.commit();
+
+                    } else {
+
+                        if (aceptaSinNombre == 0) {
+                            AlertDialog dialogoPas = MensajeAlertaNombre(2);
+                            dialogoPas.show();
+                            editor.putString("NOMBRE", "Jugador");
+                            editor.commit();
+                        }
+
                     }
 
+                    if (aceptaSinNombre == 1) {
+
+
+                        if (mpMusica.isPlaying()) {
+                            mpMusica.stop();
+                            mpMusica.release();
+                        }
+
+                        //Solo si en preferencias esta habilitado
+                        if (preferencias.getBoolean("EFECTOS", true)) {
+
+                            MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
+                            mpMegafonia.setVolume(0.01f, 0.01f);
+                            mpMegafonia.start();
+
+                        CountDownTimer esperaMegafono = new CountDownTimer(2000,1000) {
+                            @Override
+                            public void onTick(long l) {
+
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                mpMegafonia.stop();
+                                mpMegafonia.release();
+                                Intent mi_intent = new Intent(view.getContext(), JuegoCheckIn.class);
+                                startActivity(mi_intent);
+                            }
+                        }.start();
+
+
+                    }else{
+                        Intent mi_intent = new Intent(view.getContext(), JuegoCheckIn.class);
+                        startActivity(mi_intent);
+                    }
+
+
+                    }
                 }
 
-                if (aceptaSinNombre == 1) {
-
-
-
-                    if (mpMusica.isPlaying()) {
-                        mpMusica.stop();
-                        mpMusica.release();
-                    }
-
-                    MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
-                    mpMegafonia.setVolume(0.20f, 0.20f);
-                    mpMegafonia.start();
-
-                    while (mpMegafonia.isPlaying()) {
-                        //Se puede poner una animación
-                    }
-
-                    Intent mi_intent = new Intent(view.getContext(), JuegoCheckIn.class);
-                    startActivity(mi_intent);
-
-
-                    mpMegafonia.stop();
-                    mpMegafonia.release();
-                }
-            }
         });
 
         ivOpciones.setOnClickListener(new View.OnClickListener() {

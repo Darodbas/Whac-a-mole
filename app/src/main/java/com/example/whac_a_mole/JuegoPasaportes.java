@@ -34,6 +34,7 @@ public class JuegoPasaportes extends AppCompatActivity {
     protected int idAcierto,idFallo,idStamp,idFinalPartida,idBeep,idFinalBeep;
 
 
+
     protected ImageView ivPas1;
     protected ImageView ivPas2;
     protected ImageView ivPas3;
@@ -231,7 +232,7 @@ public class JuegoPasaportes extends AppCompatActivity {
     protected void CuentaAtras(){
 
         t=3;
-
+        estadoGlobal=4;
         tvCountdown.setTextColor(Color.GREEN);
         cuentaAtras = new CountDownTimer(4000,1000) {
             @Override
@@ -239,11 +240,11 @@ public class JuegoPasaportes extends AppCompatActivity {
 
                 if(t>0){
                     tvCountdown.setText(Integer.toString(t));
-                    sp.play(idBeep, volume, volume, 1, 0, 1);
+                    sp.play(idBeep, (float) (volume*0.01), (float) (volume*0.01), 1, 0, 1);
                     t--;
                 }else{
                     tvCountdown.setText("¡YA!");
-                    sp.play(idFinalBeep, volume, volume, 1, 0, 1);
+                    sp.play(idFinalBeep, (float) (volume*0.01), (float) (volume*0.01), 1, 0, 1);
                 }
 
             }
@@ -289,8 +290,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                 estadoGlobal=0;
                 tvCountdown.setText("0");
                 sp.play(idFinalPartida, 1, 1, 1, 0, 1);
-                mpMusica.stop();
-                mpMusica.release();
+                mpMusica.stop();// OJO, no la liberamos (release) , se libera al salir del modo de juego
                 OcultaPasyResum();
                 MuestraResum();
 
@@ -299,7 +299,7 @@ public class JuegoPasaportes extends AppCompatActivity {
         }.start();
     }
 
-    //Función inicia el CDT (Aquí se definen los tiempos)
+    //Función inicia el CDT (Aquí se definen los tiempos) (cdt interno que controla los pasaportes)
     protected void startTimer(){
         tiempoRestante=tiempoMilisegundos;
         //countDownInterval: Tiempo que tarda en generarse* un nuevo pasaporte (puede no generarse si toca una posicion que esta ocupada)
@@ -2155,7 +2155,7 @@ public class JuegoPasaportes extends AppCompatActivity {
 
 
 
-        mpMusica= MediaPlayer.create (JuegoPasaportes.this, R.raw.musicajuegos);
+       mpMusica= MediaPlayer.create (JuegoPasaportes.this, R.raw.musicajuegos);
 
 
 
@@ -2172,6 +2172,7 @@ public class JuegoPasaportes extends AppCompatActivity {
         sinAtender=0;
         combo=0;
         combomax=0;
+        estadoGlobal=0;
 
         //Establecemos la dificultad y preferencias
 
@@ -2202,10 +2203,6 @@ public class JuegoPasaportes extends AppCompatActivity {
         CuentaAtras();
 
 
-        //Ponemos el estado Global en 1 (Jugando) y iniciamos el contador
-        /*estadoGlobal=1;
-        startTimer();
-        startPantTimer();*/
 
 
 
@@ -2309,35 +2306,52 @@ public class JuegoPasaportes extends AppCompatActivity {
 
         public void onClick(View view) {
 
-            if(btVolver.getVisibility()==View.VISIBLE) {
+            SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
+            //paramos todos los contadores y musicas
+
+                mpMusica.stop();
+                mpMusica.release();
+
+            if(estadoGlobal==1){
+                CDT.cancel();
+                CDTpant.cancel();
+
+            }else if(estadoGlobal==4) {
+                cuentaAtras.cancel();
+            }
+
+
+            if( estadoGlobal==0 && preferencias.getBoolean("EFECTOS",true)) {
                 MediaPlayer mpMegafoniaSalir = MediaPlayer.create(JuegoPasaportes.this, R.raw.megafoniasalir);
-                mpMegafoniaSalir.setVolume(0.05f, 0.05f);
-                mpMegafoniaSalir.setLooping(false);
+                mpMegafoniaSalir.setVolume(0.01f, 0.01f);
                 mpMegafoniaSalir.start();
 
 
-                while (mpMegafoniaSalir.isPlaying()) {
-                    //Se puede poner una animación
-                }
-                mpMegafoniaSalir.stop();
-                mpMegafoniaSalir.release();
+                CountDownTimer esperaMegafono = new CountDownTimer(2000,1000) {
+                    @Override
+                    public void onTick(long l) {
 
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        mpMegafoniaSalir.stop();
+                        mpMegafoniaSalir.release();
+                        Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
+                        mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(mi_intent);
+                        finish();
+                    }
+                }.start();
+
+            }else{
+                Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
+                mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mi_intent);
+                finish();
             }
-            //paramos todos los contadores y musicas
 
-            CDT.cancel();
-            CDTpant.cancel();
-            cuentaAtras.cancel();
 
-            if(mpMusica.isPlaying()){
-                mpMusica.stop();
-                mpMusica.release();
-            }
-
-            Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
-            mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(mi_intent);
-            finish();
 
         }
     });
