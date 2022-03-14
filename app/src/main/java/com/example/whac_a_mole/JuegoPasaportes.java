@@ -286,11 +286,15 @@ public class JuegoPasaportes extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-
+                SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
                 estadoGlobal=0;
                 tvCountdown.setText("0");
-                sp.play(idFinalPartida, 1, 1, 1, 0, 1);
-                mpMusica.stop();// OJO, no la liberamos (release) , se libera al salir del modo de juego
+                if(preferencias.getBoolean("MUSICA",true)){
+                    mpMusica.stop();
+                    mpMusica.release();
+                }
+                sp.play(idFinalPartida, volume, volume, 1, 0, 1);
+
                 OcultaPasyResum();
                 MuestraResum();
 
@@ -2309,8 +2313,10 @@ public class JuegoPasaportes extends AppCompatActivity {
             SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
             //paramos todos los contadores y musicas
 
+            if(preferencias.getBoolean("MUSICA",true)&&estadoGlobal==1) {
                 mpMusica.stop();
                 mpMusica.release();
+            }
 
             if(estadoGlobal==1){
                 CDT.cancel();
