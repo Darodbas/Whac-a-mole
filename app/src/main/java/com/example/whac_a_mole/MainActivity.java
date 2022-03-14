@@ -163,70 +163,72 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
+                if (!btpas) {
 
 
-                    //pasamos nombre
-                    SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
-                    SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = records.edit();
 
-                    if (etNombre.getText().length() > 0) {
+                //pasamos nombre
+                SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
+                SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS", MODE_PRIVATE);
+                SharedPreferences.Editor editor = records.edit();
 
-                        editor.putString("NOMBRE", String.valueOf(etNombre.getText()));
-                        aceptaSinNombre = 1;
+                if (etNombre.getText().length() > 0) {
+
+                    editor.putString("NOMBRE", String.valueOf(etNombre.getText()));
+                    aceptaSinNombre = 1;
+                    editor.commit();
+
+                } else {
+
+                    if (aceptaSinNombre == 0) {
+                        AlertDialog dialogoPas = MensajeAlertaNombre(1);
+                        dialogoPas.show();
+                        editor.putString("NOMBRE", "Jugador");
                         editor.commit();
-
-                    } else {
-
-                        if (aceptaSinNombre == 0) {
-                            AlertDialog dialogoPas = MensajeAlertaNombre(1);
-                            dialogoPas.show();
-                            editor.putString("NOMBRE", "Jugador");
-                            editor.commit();
-                        }
-                    }
-
-                    if (aceptaSinNombre == 1) {
-
-
-                        if (mpMusica.isPlaying()) {
-                            mpMusica.stop();
-                            mpMusica.release();
-                        }
-
-                        //Solo si en preferencias esta habilitado
-                        if (preferencias.getBoolean("EFECTOS", true)) {
-
-                            MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
-                            mpMegafonia.setVolume(0.01f, 0.01f);
-                            mpMegafonia.start();
-
-                            CountDownTimer esperaMegafono = new CountDownTimer(2000,1000) {
-                                @Override
-                                public void onTick(long l) {
-
-                                }
-
-                                @Override
-                                public void onFinish() {
-                                    mpMegafonia.stop();
-                                    mpMegafonia.release();
-                                    Intent mi_intent = new Intent(view.getContext(), JuegoPasaportes.class);
-                                    startActivity(mi_intent);
-                                }
-                            }.start();
-
-
-                        }else{
-                            Intent mi_intent = new Intent(view.getContext(), JuegoPasaportes.class);
-                            startActivity(mi_intent);
-                        }
-
-
-
-
                     }
                 }
+
+                if (aceptaSinNombre == 1) {
+
+
+                    if (mpMusica.isPlaying()) {
+                        mpMusica.stop();
+                        mpMusica.release();
+                    }
+
+                    //Solo si en preferencias esta habilitado
+                    if (preferencias.getBoolean("EFECTOS", true)) {
+
+                        MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
+                        mpMegafonia.setVolume(0.01f, 0.01f);
+                        mpMegafonia.start();
+                        btpas=true;
+
+                        CountDownTimer esperaMegafono = new CountDownTimer(2000, 1000) {
+                            @Override
+                            public void onTick(long l) {
+
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                mpMegafonia.stop();
+                                mpMegafonia.release();
+                                Intent mi_intent = new Intent(view.getContext(), JuegoPasaportes.class);
+                                startActivity(mi_intent);
+                            }
+                        }.start();
+
+
+                    } else {
+                        Intent mi_intent = new Intent(view.getContext(), JuegoPasaportes.class);
+                        startActivity(mi_intent);
+                    }
+
+
+                }
+                }
+            }
 
         });
 
@@ -235,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-
+                if (!btfac) {
 
                     //pasamos nombre
                     SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
@@ -270,35 +272,37 @@ public class MainActivity extends AppCompatActivity {
                         //Solo si en preferencias esta habilitado
                         if (preferencias.getBoolean("EFECTOS", true)) {
 
+
                             MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
                             mpMegafonia.setVolume(0.01f, 0.01f);
                             mpMegafonia.start();
+                            btfac=true;
 
-                        CountDownTimer esperaMegafono = new CountDownTimer(2000,1000) {
-                            @Override
-                            public void onTick(long l) {
+                            CountDownTimer esperaMegafono = new CountDownTimer(2000, 1000) {
+                                @Override
+                                public void onTick(long l) {
 
-                            }
+                                }
 
-                            @Override
-                            public void onFinish() {
-                                mpMegafonia.stop();
-                                mpMegafonia.release();
-                                Intent mi_intent = new Intent(view.getContext(), JuegoCheckIn.class);
-                                startActivity(mi_intent);
-                            }
-                        }.start();
+                                @Override
+                                public void onFinish() {
+                                    mpMegafonia.stop();
+                                    mpMegafonia.release();
+                                    Intent mi_intent = new Intent(view.getContext(), JuegoCheckIn.class);
+                                    startActivity(mi_intent);
+                                }
+                            }.start();
 
 
-                    }else{
-                        Intent mi_intent = new Intent(view.getContext(), JuegoCheckIn.class);
-                        startActivity(mi_intent);
-                    }
+                        } else {
+                            Intent mi_intent = new Intent(view.getContext(), JuegoCheckIn.class);
+                            startActivity(mi_intent);
+                        }
 
 
                     }
                 }
-
+            }
         });
 
         ivOpciones.setOnClickListener(new View.OnClickListener() {
