@@ -18,6 +18,7 @@ public class Records extends AppCompatActivity {
     protected TextView[] tvPasaportesPuntuacion = new TextView[3];
     protected TextView[] tvCheckInPuntuacion = new TextView[3];
     protected TextView[] tvPasaportesCombo = new TextView[3];
+    protected TextView[] tvCheckInClicks = new TextView[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +38,25 @@ public class Records extends AppCompatActivity {
         tvPasaportesCombo[0]=findViewById(R.id.tvPCombo1);
         tvPasaportesCombo[1]=findViewById(R.id.tvPCombo2);
         tvPasaportesCombo[2]=findViewById(R.id.tvPCombo3);
+        tvCheckInNombres[0]=findViewById(R.id.tvFNombre1);
+        tvCheckInNombres[1]=findViewById(R.id.tvFNombre2);
+        tvCheckInNombres[2]=findViewById(R.id.tvFNombre3);
+        tvCheckInPuntuacion[0]=findViewById(R.id.tvFPuntuacion1);
+        tvCheckInPuntuacion[1]=findViewById(R.id.tvFPuntuacion2);
+        tvCheckInPuntuacion[2]=findViewById(R.id.tvFPuntuacion3);
+        tvCheckInClicks[0]=findViewById(R.id.tvFCombo1);
+        tvCheckInClicks[1]=findViewById(R.id.tvFCombo2);
+        tvCheckInClicks[2]=findViewById(R.id.tvFCombo3);
 
         //Asociamos valores a
         SharedPreferences records = getSharedPreferences("RECORDS",MODE_PRIVATE);
 
-        tvPasaportesNombres[0].setText(records.getString("NOMBREPAS1",""));
-        tvPasaportesNombres[1].setText(records.getString("NOMBREPAS2",""));
-        tvPasaportesNombres[2].setText(records.getString("NOMBREPAS3",""));
+        tvPasaportesNombres[0].setText(records.getString("NOMBREPAS1"," "));
+        tvPasaportesNombres[1].setText(records.getString("NOMBREPAS2"," "));
+        tvPasaportesNombres[2].setText(records.getString("NOMBREPAS3"," "));
+        tvCheckInNombres[0].setText(records.getString("NOMBRE1"," "));
+        tvCheckInNombres[1].setText(records.getString("NOMBRE2"," "));
+        tvCheckInNombres[2].setText(records.getString("NOMBRE3"," "));
 
         if(records.getInt("PUNTUACIONPAS1",-1)!=-1) {
             tvPasaportesPuntuacion[0].setText("Puntuacion: "+Integer.toString(records.getInt("PUNTUACIONPAS1", -1)));
@@ -65,7 +78,25 @@ public class Records extends AppCompatActivity {
             tvPasaportesCombo[2].setText("Combo: "+Integer.toString(records.getInt("COMBOPAS3", -1)));
         }
 
+        if(records.getLong("TIEMP1",-1)!=-1) {
+            tvCheckInPuntuacion[0].setText("Tiempo: "+Long.toString(records.getLong("TIEMP1",-1)));
+        }
+        if(records.getLong("TIEMP2",-1)!=-1) {
+            tvCheckInPuntuacion[1].setText("Tiempo: "+Long.toString(records.getLong("TIEMP2",-1)));
+        }
+        if(records.getLong("TIEMP3",-1)!=-1) {
+            tvCheckInPuntuacion[2].setText("Tiempo: "+Long.toString(records.getLong("TIEMP3",-1)));
+        }
 
+        if(records.getInt("NUMC1",-1)!=-1) {
+            tvCheckInClicks[0].setText("Num. Clicks: "+Long.toString(records.getLong("NUMC1",-1)));
+        }
+        if(records.getInt("NUMC2",-1)!=-1) {
+            tvCheckInClicks[1].setText("Num. Clicks: "+Long.toString(records.getLong("NUMC2",-1)));
+        }
+        if(records.getInt("NUMC3",-1)!=-1) {
+            tvCheckInClicks[2].setText("Num. Clicks: "+Long.toString(records.getLong("NUMC3",-1)));
+        }
 
         ivSalirRecords.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +104,5 @@ public class Records extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 }

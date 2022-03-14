@@ -22,7 +22,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     protected TextView tiempo, gameOver, tiempoFinal;
     protected int[] typeMal = new int[9];
     protected int[] contClick = new int[9];
-    protected int i, contCor = 3, ranNum, idAcierto, idFallo, idInicio, idFin;
+    protected int i, contCor = 3, ranNum, idAcierto, idFallo, idInicio, idFin, numClicks;
     protected long[] tempMal = new long[9];
     protected static final long tCDTG = 10000, interval = 1000, interval2 = 200, interval3 = 100;
     protected long temp, tempBien = 500, tempNueva = 1500, tVerd = 2000, tAmar = 3000, tRoja = 4000, tNegra = 5000, tiemp1, tiemp2, tiemp3;
@@ -32,7 +32,6 @@ public class JuegoCheckIn extends AppCompatActivity {
     protected Button volver;
     protected SoundPool sp;
     protected float volumeEf, volumeM;
-    protected String nombre, nombre1,nombre2,nombre3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +59,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
 
         temp = 0;
+        numClicks = 0;
         tiempo.setText("0");
         iniMal();
         iniContClick();
@@ -112,6 +112,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                numClicks++;
                 if(typeMal[1]==0 || typeMal[1]==5);
                 else{
                     isClicked(1);
@@ -126,6 +127,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                numClicks++;
                 if(typeMal[2]==0 || typeMal[2]==5);
                 else{
                     isClicked(2);
@@ -140,6 +142,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[3].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                numClicks++;
                 if(typeMal[3]==0 || typeMal[3]==5);
                 else{
                     isClicked(3);
@@ -154,6 +157,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[4].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                numClicks++;
                 if(typeMal[4]==0 || typeMal[4]==5);
                 else{
                     isClicked(4);
@@ -168,6 +172,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[5].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                numClicks++;
                 if(typeMal[5]==0 || typeMal[5]==5);
                 else{
                     isClicked(5);
@@ -182,6 +187,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[6].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                numClicks++;
                 if(typeMal[6]==0 || typeMal[6]==5);
                 else{
                     isClicked(6);
@@ -196,6 +202,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[7].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                numClicks++;
                 if(typeMal[7]==0 || typeMal[7]==5);
                 else{
                     isClicked(7);
@@ -210,6 +217,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[8].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                numClicks++;
                 if(typeMal[8]==0 || typeMal[8]==5);
                 else{
                     isClicked(8);
@@ -738,6 +746,8 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void newRecord(){
+        String nombre, nombre1,nombre2,nombre3;
+        int numC1, numC2;
         SharedPreferences records = getSharedPreferences("RECORDS",MODE_PRIVATE);
         SharedPreferences.Editor editor = records.edit();
 
@@ -748,41 +758,58 @@ public class JuegoCheckIn extends AppCompatActivity {
         tiemp1 = records.getLong("TIEMP1", 0);
         tiemp2 = records.getLong("TIEMP2", 0);
         tiemp3 = records.getLong("TIEMP3", 0);
+        numC1 = records.getInt("NUMC1",0);
+        numC2 = records.getInt("NUMC2",0);
 
         if(nombre1.isEmpty()){
             editor.putString("NOMBRE1",nombre);
             editor.putLong("TIEMP1",temp);
+            editor.putInt("NUMC1",numClicks);
+            editor.commit();
         }
         else{
             if(nombre2.isEmpty()){
                 editor.putString("NOMBRE2",nombre);
                 editor.putLong("TIEMP2",temp);
+                editor.putInt("NUMC2",numClicks);
+                editor.commit();
             }
             else{
                 if(nombre3.isEmpty()){
                     editor.putString("NOMBRE3",nombre);
                     editor.putLong("TIEMP3",temp);
+                    editor.putInt("NUMC3",numClicks);
+                    editor.commit();
                 }
                 else{
                     if(temp>tiemp1){
                         editor.putString("NOMBRE1",nombre);
                         editor.putLong("TIEMP1",temp);
+                        editor.putInt("NUMC1",numClicks);
                         editor.putString("NOMBRE2",nombre1);
                         editor.putLong("TIEMP2",tiemp1);
+                        editor.putInt("NUMC2",numC1);
                         editor.putString("NOMBRE3",nombre2);
                         editor.putLong("TIEMP3",tiemp2);
+                        editor.putInt("NUMC3",numC2);
+                        editor.commit();
                     }
                     else{
                         if(temp>tiemp2){
                             editor.putString("NOMBRE2",nombre);
                             editor.putLong("TIEMP2",temp);
+                            editor.putInt("NUMC2",numClicks);
                             editor.putString("NOMBRE3",nombre2);
                             editor.putLong("TIEMP3",tiemp2);
+                            editor.putInt("NUMC3",numC2);
+                            editor.commit();
                         }
                         else{
                             if(temp>tiemp3){
                                 editor.putString("NOMBRE3",nombre);
                                 editor.putLong("TIEMP3",temp);
+                                editor.putInt("NUMC3",numClicks);
+                                editor.commit();
                             }
                         }
                     }
