@@ -2,10 +2,16 @@ package com.example.whac_a_mole;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,21 +19,26 @@ public class JuegoCheckIn extends AppCompatActivity {
 
     protected ImageView[] mal = new ImageView[9];
     protected ImageView cor1, cor2, cor3;
-    protected TextView tiempo;
+    protected TextView tiempo, gameOver, tiempoFinal;
     protected int[] typeMal = new int[9];
     protected int[] contClick = new int[9];
-    protected int i, contCor = 3, ranNum;
+    protected int i, contCor = 3, ranNum, idAcierto, idFallo, idInicio, idFin;
     protected long[] tempMal = new long[9];
     protected static final long tCDTG = 10000, interval = 1000, interval2 = 200, interval3 = 100;
-    protected long temp, tempBien = 500, tempNueva = 1500, tVerd = 2000, tAmar = 3000, tRoja = 4000, tNegra = 5000;
+    protected long temp, tempBien = 500, tempNueva = 1500, tVerd = 2000, tAmar = 3000, tRoja = 4000, tNegra = 5000, tiemp1, tiemp2, tiemp3;
     protected CountDownTimer[] CDTmal = new CountDownTimer[9];
     protected CountDownTimer[] CDTbien = new CountDownTimer[9];
     protected CountDownTimer CDTG1, CDTG2, CDTNueva;
+    protected Button volver;
+    protected SoundPool sp;
+    protected float volumeEf, volumeM;
+    protected String nombre, nombre1,nombre2,nombre3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego_check_in);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mal[0] = findViewById(R.id.mal1);
         mal[1] = findViewById(R.id.mal2);
@@ -42,6 +53,11 @@ public class JuegoCheckIn extends AppCompatActivity {
         cor2 = findViewById(R.id.cor2);
         cor3 = findViewById(R.id.cor3);
         tiempo = findViewById(R.id.tiempo);
+        gameOver = findViewById(R.id.gameOver);
+        tiempoFinal = findViewById(R.id.tiempoFinal);
+        volver = findViewById(R.id.volver);
+
+        SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
 
         temp = 0;
         tiempo.setText("0");
@@ -52,14 +68,43 @@ public class JuegoCheckIn extends AppCompatActivity {
         ranNum = (int) (Math.random() * 9);
         setMal(ranNum);
 
+        if(preferencias.getBoolean("EFECTOS",true)){
+            volumeEf = 1;
+        }
+        else{
+            volumeEf = 0.0F;
+        }
+
+        if(preferencias.getBoolean("MUSICA", true)){
+            volumeM = 0.05f;
+        }
+        else{
+            volumeM = 0.0F;
+        }
+
+        MediaPlayer mp = MediaPlayer.create(JuegoCheckIn.this, R.raw.musicajuegos);
+        mp.setVolume(volumeM, volumeM);
+        mp.setLooping(true);
+        mp.start();
+
+        sp = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+        idAcierto = sp.load(this, R.raw.acierto, 1);
+        idFallo = sp.load(this, R.raw.fallo, 1);
+        idInicio = sp.load(this, R.raw.megafonia, 1);
+        idFin = sp.load(this, R.raw.megafoniasalir, 1);
+
+        sp.play(idInicio, volumeEf, volumeEf, 1, 0, 1);
+
         mal[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (typeMal[0] == 0) ;
+                if(typeMal[0]==0 || typeMal[0]==5);
                 else{
-                    pauseTiempo1();
-                    startBien1(0);
                     isClicked(0);
+                    if(typeMal[0]==5){
+                        pauseTiempo1();
+                        startBien1(0);
+                    }
                 }
             }
         });
@@ -67,11 +112,13 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (typeMal[1] == 0) ;
+                if(typeMal[1]==0 || typeMal[1]==5);
                 else{
-                    pauseTiempo2();
-                    startBien2(1);
                     isClicked(1);
+                    if(typeMal[1]==5){
+                        pauseTiempo2();
+                        startBien2(1);
+                    }
                 }
             }
         });
@@ -79,11 +126,13 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (typeMal[2] == 0) ;
+                if(typeMal[2]==0 || typeMal[2]==5);
                 else{
-                    pauseTiempo3();
-                    startBien3(2);
                     isClicked(2);
+                    if(typeMal[2]==5){
+                        pauseTiempo3();
+                        startBien3(2);
+                    }
                 }
             }
         });
@@ -91,11 +140,13 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[3].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (typeMal[3] == 0) ;
+                if(typeMal[3]==0 || typeMal[3]==5);
                 else{
-                    pauseTiempo4();
-                    startBien4(3);
                     isClicked(3);
+                    if(typeMal[3]==5){
+                        pauseTiempo4();
+                        startBien4(3);
+                    }
                 }
             }
         });
@@ -103,11 +154,13 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[4].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (typeMal[4] == 0) ;
+                if(typeMal[4]==0 || typeMal[4]==5);
                 else{
-                    pauseTiempo5();
-                    startBien5(4);
                     isClicked(4);
+                    if(typeMal[4]==5){
+                        pauseTiempo5();
+                        startBien5(4);
+                    }
                 }
             }
         });
@@ -115,11 +168,13 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[5].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (typeMal[5] == 0) ;
+                if(typeMal[5]==0 || typeMal[5]==5);
                 else{
-                    pauseTiempo6();
-                    startBien6(5);
                     isClicked(5);
+                    if(typeMal[5]==5){
+                        pauseTiempo6();
+                        startBien6(5);
+                    }
                 }
             }
         });
@@ -127,11 +182,13 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[6].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (typeMal[6] == 0) ;
+                if(typeMal[6]==0 || typeMal[6]==5);
                 else{
-                    pauseTiempo7();
-                    startBien7(6);
                     isClicked(6);
+                    if(typeMal[6]==5){
+                        pauseTiempo7();
+                        startBien7(6);
+                    }
                 }
             }
         });
@@ -139,11 +196,13 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[7].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (typeMal[7] == 0) ;
+                if(typeMal[7]==0 || typeMal[7]==5);
                 else{
-                    pauseTiempo8();
-                    startBien8(7);
                     isClicked(7);
+                    if(typeMal[7]==5){
+                        pauseTiempo8();
+                        startBien8(7);
+                    }
                 }
             }
         });
@@ -151,12 +210,21 @@ public class JuegoCheckIn extends AppCompatActivity {
         mal[8].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (typeMal[8] == 0) ;
+                if(typeMal[8]==0 || typeMal[8]==5);
                 else{
-                    pauseTiempo9();
-                    startBien9(8);
                     isClicked(8);
+                    if(typeMal[8]==5){
+                        pauseTiempo9();
+                        startBien9(8);
+                    }
                 }
+            }
+        });
+
+        volver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
@@ -369,6 +437,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 mal[0].setVisibility(View.INVISIBLE);
                 typeMal[0] = 0;
                 contCor--;
+                sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
                 isGameOver();
             }
         }.start();
@@ -389,6 +458,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 mal[1].setVisibility(View.INVISIBLE);
                 typeMal[1] = 0;
                 contCor--;
+                sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
                 isGameOver();
             }
         }.start();
@@ -409,6 +479,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 mal[2].setVisibility(View.INVISIBLE);
                 typeMal[2] = 0;
                 contCor--;
+                sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
                 isGameOver();
             }
         }.start();
@@ -429,6 +500,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 mal[3].setVisibility(View.INVISIBLE);
                 typeMal[3] = 0;
                 contCor--;
+                sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
                 isGameOver();
             }
         }.start();
@@ -449,6 +521,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 mal[4].setVisibility(View.INVISIBLE);
                 typeMal[4] = 0;
                 contCor--;
+                sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
                 isGameOver();
             }
         }.start();
@@ -469,6 +542,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 mal[5].setVisibility(View.INVISIBLE);
                 typeMal[5] = 0;
                 contCor--;
+                sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
                 isGameOver();
             }
         }.start();
@@ -489,6 +563,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 mal[6].setVisibility(View.INVISIBLE);
                 typeMal[6] = 0;
                 contCor--;
+                sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
                 isGameOver();
             }
         }.start();
@@ -509,6 +584,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 mal[7].setVisibility(View.INVISIBLE);
                 typeMal[7] = 0;
                 contCor--;
+                sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
                 isGameOver();
             }
         }.start();
@@ -529,6 +605,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 mal[8].setVisibility(View.INVISIBLE);
                 typeMal[8] = 0;
                 contCor--;
+                sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
                 isGameOver();
             }
         }.start();
@@ -549,6 +626,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         //typeMal 2 indica que hay maleta amarilla
         //typeMal 3 indica que hay maleta roja
         //typeMal 4 indica que hay maleta negra
+        //typeMal 5 indica que la maleta ha sido facturada
     }
 
     protected void iniContClick(){
@@ -561,12 +639,14 @@ public class JuegoCheckIn extends AppCompatActivity {
         if(typeMal[x]==0);
         else if(typeMal[x]==1){
             mal[x].setImageResource(R.drawable.maleta_verde_facturada);
+            sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
             typeMal[x] = 5;
         }
         else if(typeMal[x]==2){
             contClick[x]++;
             if(contClick[x]==5){
                 mal[x].setImageResource(R.drawable.maleta_amarilla_facturada);
+                sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
                 typeMal[x] = 5;
                 contClick[x] = 0;
             }
@@ -575,6 +655,7 @@ public class JuegoCheckIn extends AppCompatActivity {
             contClick[x]++;
             if(contClick[x]==10){
                 mal[x].setImageResource(R.drawable.maleta_roja_facturada);
+                sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
                 typeMal[x] = 5;
                 contClick[x] = 0;
             }
@@ -583,6 +664,7 @@ public class JuegoCheckIn extends AppCompatActivity {
             contClick[x]++;
             if(contClick[x]==20){
                 mal[x].setImageResource(R.drawable.maleta_negra_facturada);
+                sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
                 typeMal[x] = 5;
                 contClick[x] = 0;
                 if(contCor<3){
@@ -592,7 +674,7 @@ public class JuegoCheckIn extends AppCompatActivity {
             }
         }
         else{
-            Log.e("Error","typeMal en mesa 1");
+            Log.e("Error","typeMal en mesa "+Integer.toString(x+1));
         }
     }
 
@@ -655,7 +737,62 @@ public class JuegoCheckIn extends AppCompatActivity {
         startNueva();
     }
 
+    protected void newRecord(){
+        SharedPreferences records = getSharedPreferences("RECORDS",MODE_PRIVATE);
+        SharedPreferences.Editor editor = records.edit();
+
+        nombre = records.getString("NOMBRE", "");
+        nombre1 = records.getString("NOMBRECH1", "");
+        nombre2 = records.getString("NOMBRECH2", "");
+        nombre3 = records.getString("NOMBRECH3", "");
+        tiemp1 = records.getLong("TIEMP1", 0);
+        tiemp2 = records.getLong("TIEMP2", 0);
+        tiemp3 = records.getLong("TIEMP3", 0);
+
+        if(nombre1.isEmpty()){
+            editor.putString("NOMBRE1",nombre);
+            editor.putLong("TIEMP1",temp);
+        }
+        else{
+            if(nombre2.isEmpty()){
+                editor.putString("NOMBRE2",nombre);
+                editor.putLong("TIEMP2",temp);
+            }
+            else{
+                if(nombre3.isEmpty()){
+                    editor.putString("NOMBRE3",nombre);
+                    editor.putLong("TIEMP3",temp);
+                }
+                else{
+                    if(temp>tiemp1){
+                        editor.putString("NOMBRE1",nombre);
+                        editor.putLong("TIEMP1",temp);
+                        editor.putString("NOMBRE2",nombre1);
+                        editor.putLong("TIEMP2",tiemp1);
+                        editor.putString("NOMBRE3",nombre2);
+                        editor.putLong("TIEMP3",tiemp2);
+                    }
+                    else{
+                        if(temp>tiemp2){
+                            editor.putString("NOMBRE2",nombre);
+                            editor.putLong("TIEMP2",temp);
+                            editor.putString("NOMBRE3",nombre2);
+                            editor.putLong("TIEMP3",tiemp2);
+                        }
+                        else{
+                            if(temp>tiemp3){
+                                editor.putString("NOMBRE3",nombre);
+                                editor.putLong("TIEMP3",temp);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     protected void isGameOver(){
+        int j;
         if(contCor==3){
             cor1.setVisibility(View.VISIBLE);
             cor2.setVisibility(View.VISIBLE);
@@ -689,7 +826,14 @@ public class JuegoCheckIn extends AppCompatActivity {
             pauseTiempo7();
             pauseTiempo8();
             pauseTiempo9();
-            finish();
+            newRecord();
+            for(j=0;j<mal.length;j++){
+                mal[j].setVisibility(View.INVISIBLE);
+            }
+            sp.play(idFin, volumeEf, volumeEf, 1, 0, 1);
+            gameOver.setVisibility(View.VISIBLE);
+            tiempoFinal.setText("Enhorabuena, has aguantado "+Long.toString(temp)+" segundos");
+            volver.setVisibility(View.VISIBLE);
         }
     }
 }

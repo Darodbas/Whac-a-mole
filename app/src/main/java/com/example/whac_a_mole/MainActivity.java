@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
             mensaje="En este modo deberás visar correctamente los pasaportes. Hay 2 pasaportes válidos y uno no válido. Para aceptar o rechazar los pasaportes puedes cambiar la tinta del sello entre rojo y verde";
         }else{
             titulo="Facturación";
-            mensaje="explicación facturación";
+            mensaje="En este modo deberás facturar correctamente las maletas. Hay 4 tipos de maletas: la verde (Hay que darle 1 click), la amarilla (Hay que darle 5 clicks), la roja (Hay que darle 10 clicks), y la negra (Hay " +
+                    "que darle 20 clicks). Además por cada maleta no facturada perderás una vida pero facturar una maleta negra te devuelve 1 vida.";
         }
 
             AlertDialog.Builder mi_builder = new AlertDialog.Builder
