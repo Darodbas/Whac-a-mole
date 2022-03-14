@@ -26,11 +26,11 @@ public class MainActivity extends AppCompatActivity {
     protected Button btJugar, btJugar2;
     protected TextView tvColorDificultad;
 
-    protected ImageView ivInfoPasaportes, ivInfoFacturacion, ivOpciones, ivPodio,ivSalirPrincipal;
+    protected ImageView ivInfoPasaportes, ivInfoFacturacion, ivOpciones, ivPodio,ivSalirPrincipal, ivSpeaker;
     protected Spinner spDifPasaportes, spDifFacturacion;
     protected String[] nivelesDificultad={"Fácil","Medio","Difícil"};
     protected EditText etNombre;
-    protected int aceptaSinNombre=0;
+    protected int aceptaSinNombre=0,musicaSonando=1;
 
 
     //Se muestra un mensaje al pulsar info
@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         etNombre = findViewById(R.id.etNombre);
         ivSalirPrincipal = findViewById(R.id.ivSalirPrincipal);
         tvColorDificultad=findViewById(R.id.tvColorDificultad);
+        ivSpeaker=findViewById(R.id.ivSpeaker);
 
 
 
@@ -346,11 +347,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (mpMusica.isPlaying()) {
+
                     mpMusica.stop();
                     mpMusica.release();
-                }
+
                 finish();
+
+            }
+        });
+
+        ivSpeaker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(musicaSonando==1){
+                    mpMusica.pause();
+                    ivSpeaker.setImageResource(R.drawable.speakeroff);
+                    musicaSonando=0;
+                }else{
+                    mpMusica.start();
+                    ivSpeaker.setImageResource(R.drawable.speakeron);
+                    musicaSonando=1;
+                }
 
             }
         });

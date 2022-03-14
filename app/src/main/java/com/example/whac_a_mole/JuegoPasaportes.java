@@ -2324,11 +2324,15 @@ public class JuegoPasaportes extends AppCompatActivity {
 
             }
             //paramos todos los contadores y musicas
-            mpMusica.stop();
-            mpMusica.release();
+
             CDT.cancel();
             CDTpant.cancel();
             cuentaAtras.cancel();
+
+            if(mpMusica.isPlaying()){
+                mpMusica.stop();
+                mpMusica.release();
+            }
 
             Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
             mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
