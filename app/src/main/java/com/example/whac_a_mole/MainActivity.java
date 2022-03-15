@@ -367,31 +367,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*spDifFacturacion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                SharedPreferences opcionesFacturacion = getSharedPreferences("OPCIONESFacturacion",MODE_PRIVATE);
-
-                if(i==0){
-                    btJugar2.setBackgroundColor(Color.rgb(45,126,110));
-                }else if(i==1){
-                    btJugar2.setBackgroundColor(Color.rgb(200,150,50));
-                }else if(i==2){
-                    btJugar2.setBackgroundColor(Color.rgb(200,50,50));
-                }
-                SharedPreferences.Editor editor = opcionesFacturacion.edit();
-                editor.putInt("DIFICULTAD",i);
-                editor.commit();
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        */
 
         ivSalirPrincipal.setOnClickListener(new View.OnClickListener() {
             @Override

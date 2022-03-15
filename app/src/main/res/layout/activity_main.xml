@@ -32,14 +32,16 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline18"
         app:layout_constraintEnd_toStartOf="@+id/guideline37"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline36"
-        app:layout_constraintTop_toTopOf="@+id/guideline38" />
+        app:layout_constraintTop_toTopOf="@+id/guideline38"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/tvColorDificultad"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#B323B6A6"
+        android:background="#4D23B6A6"
         app:layout_constraintBottom_toBottomOf="@+id/spDificultadPasaportes"
         app:layout_constraintEnd_toStartOf="@+id/guideline102"
         app:layout_constraintStart_toStartOf="@+id/spDificultadPasaportes"

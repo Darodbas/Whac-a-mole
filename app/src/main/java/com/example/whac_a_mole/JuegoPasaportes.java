@@ -145,7 +145,7 @@ public class JuegoPasaportes extends AppCompatActivity {
             fullCombo="(Full Combo)";
         }
         tvCombo.setText("Combo máximo: "+Integer.toString(combomax)+" pasaportes seguidos");
-        tvPuntuacionResumen.setText("Puntuación total: "+Integer.toString(puntuacion)+" puntos "+fullCombo);
+        tvPuntuacionResumen.setText("Puntuación: "+Integer.toString(puntuacion)+" puntos "+fullCombo);
 
         tvRate.setText("Ratio: "+strVelMedia+" pasaportes/segundo");
 
