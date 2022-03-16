@@ -130,6 +130,8 @@ public class JuegoPasaportes extends AppCompatActivity {
         tvRate.setVisibility(View.VISIBLE);
         ivTintaVerde.setScaleY(1);
         ivTintaVerde.setScaleX(1);
+        ivTintaVerde.setImageResource(R.drawable.tintaverde);
+        ivTintaRoja.setImageResource(R.drawable.tintaroja);
         ivTintaRoja.setScaleY(1);
         ivTintaRoja.setScaleX(1);
         //Hacer visible el botón volver
@@ -261,8 +263,9 @@ public class JuegoPasaportes extends AppCompatActivity {
             public void onFinish() {
 
 //marco la tinta verde que es la seleccionada
-                ivTintaVerde.setScaleX(1.3F);
-                ivTintaVerde.setScaleY(1.3F);
+                ivTintaVerde.setScaleX(1.25F);
+                ivTintaVerde.setScaleY(1.25F);
+                ivTintaVerde.setImageResource(R.drawable.tintaverdesel);
                 estadoGlobal=1;
                 startTimer();
                 startPantTimer();
