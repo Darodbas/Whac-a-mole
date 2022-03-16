@@ -22,12 +22,17 @@ public class JuegoPasaportes extends AppCompatActivity {
     CountDownTimer CDTpant;
     CountDownTimer cuentaAtras;
     CountDownTimer[] tiempoEspera= new CountDownTimer[9];
-    long tiempoMilisegundos =60000;
-    long intervalAparicionPas;
-    long tiempoDesaparecePas;
-    long tiempoRestante;
     CountDownTimer[] espera1= new CountDownTimer[9];
     CountDownTimer[] espera2= new CountDownTimer[9];
+    CountDownTimer[] cortesiaGen = new CountDownTimer[9];
+    CountDownTimer[] cortesiaEst = new CountDownTimer[9];
+
+    protected long tiempoMilisegundos =60000;
+    protected long intervalAparicionPas;
+    protected long tiempoDesaparecePas;
+    protected long tiempoRestante;
+    protected long tiempoCortesia=200;
+    protected long tiempoSello=300;//original = 500; optimizado = 300
     //protected SharedPreferences opcionesPasaportes= getSharedPreferences("OPCIONESPASAPORTES",MODE_PRIVATE);
 
     protected SoundPool sp;
@@ -140,12 +145,15 @@ public class JuegoPasaportes extends AppCompatActivity {
         tvLegalesRechazados.setText("Pasaportes legales rechazados: "+Integer.toString(legalesRechazados));
         tvIlegalesAceptados.setText("Pasaportes ilegales aceptados: "+Integer.toString(ilegalesAceptados));
 
-        String fullCombo="";
+
         if(legalesRechazados+ilegalesAceptados+sinAtender==0){
-            fullCombo="(Full Combo)";
+
+            tvCombo.setText("* Full Combo *");
+        }else{
+            tvCombo.setText("Combo: "+Integer.toString(combomax)+" pasaportes seguidos");
         }
-        tvCombo.setText("Combo máximo: "+Integer.toString(combomax)+" pasaportes seguidos");
-        tvPuntuacionResumen.setText("Puntuación: "+Integer.toString(puntuacion)+" puntos "+fullCombo);
+
+        tvPuntuacionResumen.setText("Puntuación: "+Integer.toString(puntuacion)+" puntos");
 
         tvRate.setText("Ratio: "+strVelMedia+" pasaportes/segundo");
 
@@ -344,7 +352,7 @@ public class JuegoPasaportes extends AppCompatActivity {
 
 
         //Generamos numero de mesa y de pasaporte
-        int numMesa =  (int)(Math.random()*9);
+        int numMesa = (int)(Math.random()*9);
         int numPas = (int)((Math.random()*3)+1);
 
 
@@ -380,10 +388,22 @@ public class JuegoPasaportes extends AppCompatActivity {
                         public void onFinish() {
                             // Código cuando finalice el timer vuelve invisible el pasaporte y pone el estado de la mesa a 0 si no le han dado antes
                             if (estados[0] != 0 && estados[0] != 4) {
-                                estados[0] = 0;
+
                                 ivPas1.setVisibility(View.INVISIBLE);
                                 sinAtender++;
                                 combo=0;
+                                //esperamos un tiempo de cortesia para que no pueda aparecer inmediatamente otro pasaporte
+                                cortesiaGen[0]=new CountDownTimer(tiempoCortesia,100) {
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        estados[0] = 0;
+                                    }
+                                }.start();
                             }
                         }
                     }.start();
@@ -413,10 +433,22 @@ public class JuegoPasaportes extends AppCompatActivity {
                         public void onFinish() {
                             // Código cuando finalice el timer vuelve invisible el pasaporte y pone el estado de la mesa a 0 si no le han dado antes
                             if (estados[1] != 0 && estados[1] != 4) {
-                                estados[1] = 0;
+
                                 ivPas2.setVisibility(View.INVISIBLE);
                                 sinAtender++;
                                 combo=0;
+                                //esperamos un tiempo de cortesia para que no pueda aparecer inmediatamente otro pasaporte
+                                cortesiaGen[1]=new CountDownTimer(tiempoCortesia,100) {
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        estados[1] = 0;
+                                    }
+                                }.start();
                             }
                         }
                     }.start();
@@ -446,10 +478,23 @@ public class JuegoPasaportes extends AppCompatActivity {
                         public void onFinish() {
                             // Código cuando finalice el timer vuelve invisible el pasaporte y pone el estado de la mesa a 0 si no le han dado antes
                             if (estados[2] != 0 && estados[2] != 4) {
-                                estados[2] = 0;
                                 ivPas3.setVisibility(View.INVISIBLE);
                                 sinAtender++;
                                 combo=0;
+                                //esperamos un tiempo de cortesia para que no pueda aparecer inmediatamente otro pasaporte
+                                cortesiaGen[2]=new CountDownTimer(tiempoCortesia,100) {
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        estados[2] = 0;
+                                    }
+                                }.start();
+
+
                             }
                         }
                     }.start();
@@ -476,10 +521,22 @@ public class JuegoPasaportes extends AppCompatActivity {
                         public void onFinish() {
                             // Código cuando finalice el timer vuelve invisible el pasaporte y pone el estado de la mesa a 0 si no le han dado antes
                             if (estados[3] != 0 && estados[3] != 4) {
-                                estados[3] = 0;
+
                                 ivPas4.setVisibility(View.INVISIBLE);
                                 sinAtender++;
                                 combo=0;
+                                //esperamos un tiempo de cortesia para que no pueda aparecer inmediatamente otro pasaporte
+                                cortesiaGen[3]=new CountDownTimer(tiempoCortesia,100) {
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        estados[3] = 0;
+                                    }
+                                }.start();
                             }
                         }
                     }.start();
@@ -506,10 +563,22 @@ public class JuegoPasaportes extends AppCompatActivity {
                         public void onFinish() {
                             // Código cuando finalice el timer vuelve invisible el pasaporte y pone el estado de la mesa a 0 si no le han dado antes
                             if (estados[4] != 0 && estados[4] != 4) {
-                                estados[4] = 0;
+
                                 ivPas5.setVisibility(View.INVISIBLE);
                                 sinAtender++;
                                 combo=0;
+                                //esperamos un tiempo de cortesia para que no pueda aparecer inmediatamente otro pasaporte
+                                cortesiaGen[4]=new CountDownTimer(tiempoCortesia,100) {
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        estados[4] = 0;
+                                    }
+                                }.start();
                             }
                         }
                     }.start();
@@ -536,10 +605,22 @@ public class JuegoPasaportes extends AppCompatActivity {
                         public void onFinish() {
                             // Código cuando finalice el timer vuelve invisible el pasaporte y pone el estado de la mesa a 0 si no le han dado antes
                             if (estados[5] != 0 && estados[5] != 4) {
-                                estados[5] = 0;
+
                                 ivPas6.setVisibility(View.INVISIBLE);
                                 sinAtender++;
                                 combo=0;
+                                //esperamos un tiempo de cortesia para que no pueda aparecer inmediatamente otro pasaporte
+                                cortesiaGen[5]=new CountDownTimer(tiempoCortesia,100) {
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        estados[5] = 0;
+                                    }
+                                }.start();
                             }
                         }
                     }.start();
@@ -566,10 +647,21 @@ public class JuegoPasaportes extends AppCompatActivity {
                         public void onFinish() {
                             // Código cuando finalice el timer vuelve invisible el pasaporte y pone el estado de la mesa a 0 si no le han dado antes
                             if (estados[6] != 0 && estados[6] != 4) {
-                                estados[6] = 0;
                                 ivPas7.setVisibility(View.INVISIBLE);
                                 sinAtender++;
                                 combo=0;
+                                //esperamos un tiempo de cortesia para que no pueda aparecer inmediatamente otro pasaporte
+                                cortesiaGen[6]=new CountDownTimer(tiempoCortesia,100) {
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        estados[6] = 0;
+                                    }
+                                }.start();
                             }
                         }
                     }.start();
@@ -596,10 +688,22 @@ public class JuegoPasaportes extends AppCompatActivity {
                         public void onFinish() {
                             // Código cuando finalice el timer vuelve invisible el pasaporte y pone el estado de la mesa a 0 si no le han dado antes
                             if (estados[7] != 0 && estados[7] != 4) {
-                                estados[7] = 0;
+
                                 ivPas8.setVisibility(View.INVISIBLE);
                                 sinAtender++;
                                 combo=0;
+                                //esperamos un tiempo de cortesia para que no pueda aparecer inmediatamente otro pasaporte
+                                cortesiaGen[7]=new CountDownTimer(tiempoCortesia,100) {
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        estados[7] = 0;
+                                    }
+                                }.start();
                             }
                         }
                     }.start();
@@ -626,10 +730,21 @@ public class JuegoPasaportes extends AppCompatActivity {
                         public void onFinish() {
                             // Código cuando finalice el timer vuelve invisible el pasaporte y pone el estado de la mesa a 0 si no le han dado antes
                             if (estados[8] != 0 && estados[8] != 4) {
-                                estados[8] = 0;
                                 ivPas9.setVisibility(View.INVISIBLE);
                                 sinAtender++;
                                 combo=0;
+                                //esperamos un tiempo de cortesia para que no pueda aparecer inmediatamente otro pasaporte
+                                cortesiaGen[8]=new CountDownTimer(tiempoCortesia,100) {
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        estados[8] = 0;
+                                    }
+                                }.start();
                             }
                         }
                     }.start();
@@ -687,7 +802,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
 
                                 //segunda espera para que se vea el sello
-                                espera2[0] = new CountDownTimer(500, 100) {
+                                espera2[0] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -697,7 +812,20 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas1.setVisibility(View.INVISIBLE);
                                         tiempoEspera[0].cancel();
-                                        estados[0] = 0;
+                                        //estados[0] = 0;
+                                        //tiempo de cortesia para que no apareza otro pasaporte inmediatamente despues de eliminar uno
+                                        cortesiaEst[0] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[0] = 0;
+                                            }
+                                        }.start();
+
                                     }
                                 }.start();
                             }
@@ -737,7 +865,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[0]= new CountDownTimer(500, 100) {
+                                espera2[0]= new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -747,7 +875,19 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas1.setVisibility(View.INVISIBLE);
                                         tiempoEspera[0].cancel();
-                                        estados[0] = 0;
+                                       // estados[0] = 0;
+                                        cortesiaEst[0] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[0] = 0;
+                                            }
+                                        }.start();
+
                                     }
                                 }.start();
                             }
@@ -789,7 +929,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[0] = new CountDownTimer(500, 100) {
+                                espera2[0] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -799,7 +939,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas1.setVisibility(View.INVISIBLE);
                                         tiempoEspera[0].cancel();
-                                        estados[0] = 0;
+                                        //estados[0] = 0;
+                                        cortesiaEst[0] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[0] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -844,7 +995,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
 
                                 //segunda espera para que se vea el sello
-                                espera2[1] = new CountDownTimer(500, 100) {
+                                espera2[1] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -854,7 +1005,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas2.setVisibility(View.INVISIBLE);
                                         tiempoEspera[1].cancel();
-                                        estados[1] = 0;
+                                        //estados[1] = 0;
+                                        cortesiaEst[1] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[1] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -894,7 +1056,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[1]= new CountDownTimer(500, 100) {
+                                espera2[1]= new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -904,7 +1066,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas2.setVisibility(View.INVISIBLE);
                                         tiempoEspera[1].cancel();
-                                        estados[1] = 0;
+                                        //estados[1] = 0;
+                                        cortesiaEst[1] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[1] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -946,7 +1119,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[1] = new CountDownTimer(500, 100) {
+                                espera2[1] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -956,7 +1129,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas2.setVisibility(View.INVISIBLE);
                                         tiempoEspera[1].cancel();
-                                        estados[1] = 0;
+                                        //estados[1] = 0;
+                                        cortesiaEst[1] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[1] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1003,7 +1187,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
 
                                 //segunda espera para que se vea el sello
-                                espera2[2] = new CountDownTimer(500, 100) {
+                                espera2[2] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1013,7 +1197,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas3.setVisibility(View.INVISIBLE);
                                         tiempoEspera[2].cancel();
-                                        estados[2] = 0;
+                                        //estados[2] = 0;
+                                        cortesiaEst[2] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[2] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1053,7 +1248,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[2]= new CountDownTimer(500, 100) {
+                                espera2[2]= new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1063,7 +1258,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas3.setVisibility(View.INVISIBLE);
                                         tiempoEspera[2].cancel();
-                                        estados[2] = 0;
+                                        //estados[2] = 0;
+                                        cortesiaEst[2] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[2] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1105,7 +1311,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[2] = new CountDownTimer(500, 100) {
+                                espera2[2] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1115,7 +1321,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas3.setVisibility(View.INVISIBLE);
                                         tiempoEspera[2].cancel();
-                                        estados[2] = 0;
+                                        //estados[2] = 0;
+                                        cortesiaEst[2] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[2] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1162,7 +1379,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
 
                                 //segunda espera para que se vea el sello
-                                espera2[3] = new CountDownTimer(500, 100) {
+                                espera2[3] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1172,7 +1389,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas4.setVisibility(View.INVISIBLE);
                                         tiempoEspera[3].cancel();
-                                        estados[3] = 0;
+                                        //estados[3] = 0;
+                                        cortesiaEst[3] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[3] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1212,7 +1440,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[3]= new CountDownTimer(500, 100) {
+                                espera2[3]= new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1222,7 +1450,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas4.setVisibility(View.INVISIBLE);
                                         tiempoEspera[3].cancel();
-                                        estados[3] = 0;
+                                        //estados[3] = 0;
+                                        cortesiaEst[3] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[3] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1264,7 +1503,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[3] = new CountDownTimer(500, 100) {
+                                espera2[3] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1274,7 +1513,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas4.setVisibility(View.INVISIBLE);
                                         tiempoEspera[3].cancel();
-                                        estados[3] = 0;
+                                        //estados[3] = 0;
+                                        cortesiaEst[3] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[3] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1323,7 +1573,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
 
                                 //segunda espera para que se vea el sello
-                                espera2[4] = new CountDownTimer(500, 100) {
+                                espera2[4] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1333,7 +1583,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas5.setVisibility(View.INVISIBLE);
                                         tiempoEspera[4].cancel();
-                                        estados[4] = 0;
+                                        //estados[4] = 0;
+                                        cortesiaEst[4] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[4] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1373,7 +1634,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[4]= new CountDownTimer(500, 100) {
+                                espera2[4]= new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1383,7 +1644,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas5.setVisibility(View.INVISIBLE);
                                         tiempoEspera[4].cancel();
-                                        estados[4] = 0;
+                                        //estados[4] = 0;
+                                        cortesiaEst[4] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[4] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1425,7 +1697,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[4] = new CountDownTimer(500, 100) {
+                                espera2[4] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1435,7 +1707,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas5.setVisibility(View.INVISIBLE);
                                         tiempoEspera[4].cancel();
-                                        estados[4] = 0;
+                                        //estados[4] = 0;
+                                        cortesiaEst[4] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[4] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1485,7 +1768,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
 
                                 //segunda espera para que se vea el sello
-                                espera2[5] = new CountDownTimer(500, 100) {
+                                espera2[5] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1495,7 +1778,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas6.setVisibility(View.INVISIBLE);
                                         tiempoEspera[5].cancel();
-                                        estados[5] = 0;
+                                        //estados[5] = 0;
+                                        cortesiaEst[5] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[5] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1535,7 +1829,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[5]= new CountDownTimer(500, 100) {
+                                espera2[5]= new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1545,7 +1839,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas6.setVisibility(View.INVISIBLE);
                                         tiempoEspera[5].cancel();
-                                        estados[5] = 0;
+                                        //estados[5] = 0;
+                                        cortesiaEst[5] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[5] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1587,7 +1892,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[5] = new CountDownTimer(500, 100) {
+                                espera2[5] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1597,7 +1902,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas6.setVisibility(View.INVISIBLE);
                                         tiempoEspera[5].cancel();
-                                        estados[5] = 0;
+                                        //estados[5] = 0;
+                                        cortesiaEst[5] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[5] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1645,7 +1961,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
 
                                 //segunda espera para que se vea el sello
-                                espera2[6] = new CountDownTimer(500, 100) {
+                                espera2[6] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1655,7 +1971,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas7.setVisibility(View.INVISIBLE);
                                         tiempoEspera[6].cancel();
-                                        estados[6] = 0;
+                                        //estados[6] = 0;
+                                        cortesiaEst[6] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[6] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1695,7 +2022,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[6]= new CountDownTimer(500, 100) {
+                                espera2[6]= new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1705,7 +2032,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas7.setVisibility(View.INVISIBLE);
                                         tiempoEspera[6].cancel();
-                                        estados[6] = 0;
+                                        //estados[6] = 0;
+                                        cortesiaEst[6] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[6] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1747,7 +2085,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[6] = new CountDownTimer(500, 100) {
+                                espera2[6] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1757,7 +2095,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas7.setVisibility(View.INVISIBLE);
                                         tiempoEspera[6].cancel();
-                                        estados[6] = 0;
+                                        //estados[6] = 0;
+                                        cortesiaEst[6] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[6] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1805,7 +2154,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
 
                                 //segunda espera para que se vea el sello
-                                espera2[7] = new CountDownTimer(500, 100) {
+                                espera2[7] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1815,7 +2164,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas8.setVisibility(View.INVISIBLE);
                                         tiempoEspera[7].cancel();
-                                        estados[7] = 0;
+                                        //estados[7] = 0;
+                                        cortesiaEst[7] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[7] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1855,7 +2215,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[7]= new CountDownTimer(500, 100) {
+                                espera2[7]= new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1865,7 +2225,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas8.setVisibility(View.INVISIBLE);
                                         tiempoEspera[7].cancel();
-                                        estados[7] = 0;
+                                        //estados[7] = 0;
+                                        cortesiaEst[7] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[7] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1907,7 +2278,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[7] = new CountDownTimer(500, 100) {
+                                espera2[7] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1917,7 +2288,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas8.setVisibility(View.INVISIBLE);
                                         tiempoEspera[7].cancel();
-                                        estados[7] = 0;
+                                        //estados[7] = 0;
+                                        cortesiaEst[7] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[7] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -1964,7 +2346,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
 
                                 //segunda espera para que se vea el sello
-                                espera2[8] = new CountDownTimer(500, 100) {
+                                espera2[8] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -1974,7 +2356,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas9.setVisibility(View.INVISIBLE);
                                         tiempoEspera[8].cancel();
-                                        estados[8] = 0;
+                                        //estados[8] = 0;
+                                        cortesiaEst[8] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[8] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -2014,7 +2407,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[8]= new CountDownTimer(500, 100) {
+                                espera2[8]= new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -2024,7 +2417,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas9.setVisibility(View.INVISIBLE);
                                         tiempoEspera[8].cancel();
-                                        estados[8] = 0;
+                                        //estados[8] = 0;
+                                        cortesiaEst[8] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[8] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -2067,7 +2471,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                                 }
                                 //segunda espera para que se vea el sello
 
-                                espera2[8] = new CountDownTimer(500, 100) {
+                                espera2[8] = new CountDownTimer(tiempoSello, 100) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
                                         // Código con cada tic del timer
@@ -2077,7 +2481,18 @@ public class JuegoPasaportes extends AppCompatActivity {
                                     public void onFinish() {
                                         ivPas9.setVisibility(View.INVISIBLE);
                                         tiempoEspera[8].cancel();
-                                        estados[8] = 0;
+                                        //estados[8] = 0;
+                                        cortesiaEst[8] = new CountDownTimer(tiempoCortesia,100) {
+                                            @Override
+                                            public void onTick(long l) {
+
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                estados[8] = 0;
+                                            }
+                                        }.start();
                                     }
                                 }.start();
                             }
@@ -2280,10 +2695,12 @@ public class JuegoPasaportes extends AppCompatActivity {
             public void onClick(View view) {
                 tinta=1;
                 if(estadoGlobal==1){
-                        ivTintaVerde.setScaleX(1.3F);
-                        ivTintaVerde.setScaleY(1.3F);
+                        ivTintaVerde.setScaleX(1.25F);
+                        ivTintaVerde.setScaleY(1.25F);
+                        ivTintaVerde.setImageResource(R.drawable.tintaverdesel);
                         ivTintaRoja.setScaleX(1F);
                         ivTintaRoja.setScaleY(1F);
+                        ivTintaRoja.setImageResource(R.drawable.tintaroja);
                 }
 
 
@@ -2297,8 +2714,10 @@ public class JuegoPasaportes extends AppCompatActivity {
                 if(estadoGlobal==1) {
                     ivTintaVerde.setScaleX(1F);
                     ivTintaVerde.setScaleY(1F);
-                    ivTintaRoja.setScaleX(1.3F);
-                    ivTintaRoja.setScaleY(1.3F);
+                    ivTintaVerde.setImageResource(R.drawable.tintaverde);
+                    ivTintaRoja.setScaleX(1.25F);
+                    ivTintaRoja.setScaleY(1.25F);
+                    ivTintaRoja.setImageResource(R.drawable.tintarojasel);
                 }
             }
         });

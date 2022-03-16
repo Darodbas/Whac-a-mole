@@ -59,13 +59,13 @@ public class Records extends AppCompatActivity {
         tvCheckInNombres[2].setText(records.getString("NOMBRE3"," "));
 
         if(records.getInt("PUNTUACIONPAS1",-1)!=-1) {
-            tvPasaportesPuntuacion[0].setText("Puntuacion: "+Integer.toString(records.getInt("PUNTUACIONPAS1", -1)));
+            tvPasaportesPuntuacion[0].setText("Puntuación: "+Integer.toString(records.getInt("PUNTUACIONPAS1", -1)));
         }
         if(records.getInt("PUNTUACIONPAS2",-1)!=-1) {
-            tvPasaportesPuntuacion[1].setText("Puntuacion: "+Integer.toString(records.getInt("PUNTUACIONPAS2", -1)));
+            tvPasaportesPuntuacion[1].setText("Puntuación: "+Integer.toString(records.getInt("PUNTUACIONPAS2", -1)));
         }
         if(records.getInt("PUNTUACIONPAS3",-1)!=-1) {
-            tvPasaportesPuntuacion[2].setText("Puntuacion: "+Integer.toString(records.getInt("PUNTUACIONPAS3", -1)));
+            tvPasaportesPuntuacion[2].setText("Puntuación: "+Integer.toString(records.getInt("PUNTUACIONPAS3", -1)));
         }
 
         if(records.getInt("COMBOPAS1",-1)!=-1) {
