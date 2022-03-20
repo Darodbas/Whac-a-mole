@@ -863,55 +863,57 @@ public class JuegoCheckIn extends AppCompatActivity {
         numC1 = records.getInt("NUMC1",0);
         numC2 = records.getInt("NUMC2",0);
 
-        if(nombre1.isEmpty()){
-            editor.putString("NOMBRE1",nombre);
-            editor.putLong("TIEMP1",temp);
-            editor.putInt("NUMC1",numClicks);
-            editor.commit();
-        }
-        else{
-            if(nombre2.isEmpty()){
-                editor.putString("NOMBRE2",nombre);
-                editor.putLong("TIEMP2",temp);
-                editor.putInt("NUMC2",numClicks);
+        if(nombre!="Jugador"){
+            if(nombre1.isEmpty()){
+                editor.putString("NOMBRE1",nombre);
+                editor.putLong("TIEMP1",temp);
+                editor.putInt("NUMC1",numClicks);
                 editor.commit();
             }
             else{
-                if(nombre3.isEmpty()){
-                    editor.putString("NOMBRE3",nombre);
-                    editor.putLong("TIEMP3",temp);
-                    editor.putInt("NUMC3",numClicks);
+                if(nombre2.isEmpty()){
+                    editor.putString("NOMBRE2",nombre);
+                    editor.putLong("TIEMP2",temp);
+                    editor.putInt("NUMC2",numClicks);
                     editor.commit();
                 }
                 else{
-                    if(temp>tiemp1){
-                        editor.putString("NOMBRE1",nombre);
-                        editor.putLong("TIEMP1",temp);
-                        editor.putInt("NUMC1",numClicks);
-                        editor.putString("NOMBRE2",nombre1);
-                        editor.putLong("TIEMP2",tiemp1);
-                        editor.putInt("NUMC2",numC1);
-                        editor.putString("NOMBRE3",nombre2);
-                        editor.putLong("TIEMP3",tiemp2);
-                        editor.putInt("NUMC3",numC2);
+                    if(nombre3.isEmpty()){
+                        editor.putString("NOMBRE3",nombre);
+                        editor.putLong("TIEMP3",temp);
+                        editor.putInt("NUMC3",numClicks);
                         editor.commit();
                     }
                     else{
-                        if(temp>tiemp2){
-                            editor.putString("NOMBRE2",nombre);
-                            editor.putLong("TIEMP2",temp);
-                            editor.putInt("NUMC2",numClicks);
+                        if(temp>tiemp1){
+                            editor.putString("NOMBRE1",nombre);
+                            editor.putLong("TIEMP1",temp);
+                            editor.putInt("NUMC1",numClicks);
+                            editor.putString("NOMBRE2",nombre1);
+                            editor.putLong("TIEMP2",tiemp1);
+                            editor.putInt("NUMC2",numC1);
                             editor.putString("NOMBRE3",nombre2);
                             editor.putLong("TIEMP3",tiemp2);
                             editor.putInt("NUMC3",numC2);
                             editor.commit();
                         }
                         else{
-                            if(temp>tiemp3){
-                                editor.putString("NOMBRE3",nombre);
-                                editor.putLong("TIEMP3",temp);
-                                editor.putInt("NUMC3",numClicks);
+                            if(temp>tiemp2){
+                                editor.putString("NOMBRE2",nombre);
+                                editor.putLong("TIEMP2",temp);
+                                editor.putInt("NUMC2",numClicks);
+                                editor.putString("NOMBRE3",nombre2);
+                                editor.putLong("TIEMP3",tiemp2);
+                                editor.putInt("NUMC3",numC2);
                                 editor.commit();
+                            }
+                            else{
+                                if(temp>tiemp3){
+                                    editor.putString("NOMBRE3",nombre);
+                                    editor.putLong("TIEMP3",temp);
+                                    editor.putInt("NUMC3",numClicks);
+                                    editor.commit();
+                                }
                             }
                         }
                     }
