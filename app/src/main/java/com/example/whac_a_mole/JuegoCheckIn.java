@@ -2,6 +2,7 @@ package com.example.whac_a_mole;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
@@ -39,6 +40,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego_check_in);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getSupportActionBar().hide();
 
         mal[0] = findViewById(R.id.mal1);
         mal[1] = findViewById(R.id.mal2);
@@ -238,9 +240,19 @@ public class JuegoCheckIn extends AppCompatActivity {
                     mp.stop();
                     mp.release();
                 }
+                Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
+                mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mi_intent);
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed(){
+        contCor=-1;
+        isGameOver();
+        volver.performClick();
     }
 
     protected void startTiempoG1(){

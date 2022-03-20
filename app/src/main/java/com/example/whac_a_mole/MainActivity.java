@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     protected EditText etNombre;
     protected int aceptaSinNombre=0,musicaSonando=1;
     protected boolean btpas,btfac;
+    protected float volumeM;
 
 
     //Se muestra un mensaje al pulsar info
@@ -141,10 +142,22 @@ public class MainActivity extends AppCompatActivity {
         btpas=false;
         btfac=false;
 
+        //ponemos el Nombre anterior si hay
+        SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
+        SharedPreferences.Editor editor = records.edit();
+        etNombre.setText(records.getString("NOMBRE"," "));
 
+        SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS", MODE_PRIVATE);
+
+        if(preferencias.getBoolean("MUSICA", true)){
+            volumeM = 0.05f;
+        }
+        else{
+            volumeM = 0.0F;
+        }
 
         MediaPlayer mpMusica= MediaPlayer.create (MainActivity.this, R.raw.menuinicio);
-        mpMusica.setVolume(0.05f, 0.05f);
+        mpMusica.setVolume(volumeM, volumeM);
         mpMusica.setLooping(true);
         mpMusica.start();
 
@@ -154,24 +167,12 @@ public class MainActivity extends AppCompatActivity {
         spDifPasaportes.setAdapter(mi_adaptador);
         spDifFacturacion.setAdapter(mi_adaptador);
 
-        //ponemos el Nombre anterior si hay
-        SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
-        etNombre.setText(records.getString("NOMBRE",""));
-
-
         btJugar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
-                if (!btpas) {
-
-
-
-                //pasamos nombre
-                SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
-                SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS", MODE_PRIVATE);
-                SharedPreferences.Editor editor = records.edit();
+                if (!btpas){
 
                 if (etNombre.getText().length() > 0) {
 
