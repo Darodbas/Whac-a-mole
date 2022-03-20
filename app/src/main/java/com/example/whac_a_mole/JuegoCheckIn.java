@@ -20,8 +20,8 @@ import android.widget.TextView;
 public class JuegoCheckIn extends AppCompatActivity {
 
     protected ImageView[] mal = new ImageView[9];
-    protected ImageView cor1, cor2, cor3;
-    protected TextView tiempo, gameOver, tiempoFinal;
+    protected ImageView cor1, cor2, cor3,ivPortafoliocheckin;
+    protected TextView tiempo, gameOver, tiempoFinal,tvClicksTotales;
     protected int[] typeMal = new int[9];
     protected int[] contClick = new int[9];
     protected int[] tempOn = new int[20];
@@ -64,6 +64,11 @@ public class JuegoCheckIn extends AppCompatActivity {
         gameOver = findViewById(R.id.gameOver);
         tiempoFinal = findViewById(R.id.tiempoFinal);
         volver = findViewById(R.id.volver);
+
+        //cosas que he añadido
+        ivPortafoliocheckin = findViewById(R.id.ivPortafolioCheckin);
+        tvClicksTotales = findViewById(R.id.tvClicksTotales);
+
 
         SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
 
@@ -1059,7 +1064,9 @@ public class JuegoCheckIn extends AppCompatActivity {
             //Añadir portapapeles con resultados//
 
             tiempoFinal.setText("Enhorabuena, has aguantado "+Long.toString(temp)+" segundos");
+            tvClicksTotales.setText("Clics totales: "+numClicks);
             volver.setVisibility(View.VISIBLE);
+            ivPortafoliocheckin.setVisibility(View.VISIBLE);
         }
     }
 }
