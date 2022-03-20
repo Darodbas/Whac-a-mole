@@ -22,7 +22,8 @@ public class JuegoCheckIn extends AppCompatActivity {
     protected TextView tiempo, gameOver, tiempoFinal;
     protected int[] typeMal = new int[9];
     protected int[] contClick = new int[9];
-    protected int i, contCor = 3, ranNum, idAcierto, idFallo, idInicio, idFin, numClicks;
+    protected int[] tempOn = new int[21];
+    protected int contCor = 3, ranNum, idAcierto, idFallo, idInicio, idFin, numClicks;
     protected long[] tempMal = new long[9];
     protected static final long tCDTG = 10000, interval = 1000, interval2 = 200, interval3 = 100;
     protected long temp, tempBien = 500, tempNueva = 1500, tVerd = 2000, tAmar = 3000, tRoja = 4000, tNegra = 5000, tiemp1, tiemp2, tiemp3;
@@ -63,6 +64,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         tiempo.setText("0");
         iniMal();
         iniContClick();
+        iniTempOn();
 
         startTiempoG1();
         ranNum = (int) (Math.random() * 9);
@@ -232,6 +234,10 @@ public class JuegoCheckIn extends AppCompatActivity {
         volver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (mp.isPlaying()) {
+                    mp.stop();
+                    mp.release();
+                }
                 finish();
             }
         });
@@ -243,6 +249,7 @@ public class JuegoCheckIn extends AppCompatActivity {
             public void onTick(long l) {
                 temp++;
                 tiempo.setText(Long.toString(temp));
+                tempOn[18]=1;
             }
 
             @Override
@@ -252,6 +259,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 if(tRoja>200) tRoja -= 200;
                 if(tNegra>200)  tNegra -= 200;
                 if(tempNueva>100) tempNueva -= 100;
+                tempOn[18]=0;
 
                 startTiempoG2();
             }
@@ -259,6 +267,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempoG1(){
+        tempOn[18]=0;
         CDTG1.cancel();
     }
 
@@ -268,6 +277,7 @@ public class JuegoCheckIn extends AppCompatActivity {
             public void onTick(long l) {
                 temp++;
                 tiempo.setText(Long.toString(temp));
+                tempOn[19]=1;
             }
 
             @Override
@@ -277,6 +287,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 if(tRoja>200) tRoja -= 200;
                 if(tNegra>200)  tNegra -= 200;
                 if(tempNueva>100) tempNueva -= 100;
+                tempOn[19]=0;
 
                 startTiempoG1();
             }
@@ -284,6 +295,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempoG2(){
+        tempOn[19]=0;
         CDTG2.cancel();
     }
 
@@ -291,6 +303,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTNueva = new CountDownTimer(tempNueva, interval3) {
             @Override
             public void onTick(long l) {
+                tempOn[20]=1;
             }
 
             @Override
@@ -299,12 +312,14 @@ public class JuegoCheckIn extends AppCompatActivity {
                 while(typeMal[ranNum]!=0){
                     ranNum = (int)(Math.random()*9);
                 }
+                tempOn[20]=0;
                 setMal(ranNum);
             }
         }.start();
     }
 
     protected void pauseNueva(){
+        tempOn[20]=0;
         CDTNueva.cancel();
     }
 
@@ -312,136 +327,201 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTbien[x] = new CountDownTimer(tempBien, interval3) {
             @Override
             public void onTick(long l) {
+                tempOn[9]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[9]=0;
                 mal[x].setVisibility(View.INVISIBLE);
                 typeMal[x] = 0;
             }
         }.start();
+    }
+
+    protected void pauseBien1(int x){
+        tempOn[9]=0;
+        CDTbien[x].cancel();
     }
 
     protected void startBien2(int x){
         CDTbien[x] = new CountDownTimer(tempBien, interval3) {
             @Override
             public void onTick(long l) {
+                tempOn[10]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[10]=0;
                 mal[x].setVisibility(View.INVISIBLE);
                 typeMal[x] = 0;
             }
         }.start();
+    }
+
+    protected void pauseBien2(int x){
+        tempOn[10]=0;
+        CDTbien[x].cancel();
     }
 
     protected void startBien3(int x){
         CDTbien[x] = new CountDownTimer(tempBien, interval3) {
             @Override
             public void onTick(long l) {
+                tempOn[11]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[11]=0;
                 mal[x].setVisibility(View.INVISIBLE);
                 typeMal[x] = 0;
             }
         }.start();
+    }
+
+    protected void pauseBien3(int x){
+        tempOn[11]=0;
+        CDTbien[x].cancel();
     }
 
     protected void startBien4(int x){
         CDTbien[x] = new CountDownTimer(tempBien, interval3) {
             @Override
             public void onTick(long l) {
+                tempOn[12]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[12]=0;
                 mal[x].setVisibility(View.INVISIBLE);
                 typeMal[x] = 0;
             }
         }.start();
+    }
+
+    protected void pauseBien4(int x){
+        tempOn[12]=0;
+        CDTbien[x].cancel();
     }
 
     protected void startBien5(int x){
         CDTbien[x] = new CountDownTimer(tempBien, interval3) {
             @Override
             public void onTick(long l) {
+                tempOn[13]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[13]=0;
                 mal[x].setVisibility(View.INVISIBLE);
                 typeMal[x] = 0;
             }
         }.start();
+    }
+
+    protected void pauseBien5(int x){
+        tempOn[13]=0;
+        CDTbien[x].cancel();
     }
 
     protected void startBien6(int x){
         CDTbien[x] = new CountDownTimer(tempBien, interval3) {
             @Override
             public void onTick(long l) {
+                tempOn[14]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[14]=0;
                 mal[x].setVisibility(View.INVISIBLE);
                 typeMal[x] = 0;
             }
         }.start();
+    }
+
+    protected void pauseBien6(int x){
+        tempOn[14]=0;
+        CDTbien[x].cancel();
     }
 
     protected void startBien7(int x){
         CDTbien[x] = new CountDownTimer(tempBien, interval3) {
             @Override
             public void onTick(long l) {
+                tempOn[15]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[15]=0;
                 mal[x].setVisibility(View.INVISIBLE);
                 typeMal[x] = 0;
             }
         }.start();
+    }
+
+    protected void pauseBien7(int x){
+        tempOn[15]=0;
+        CDTbien[x].cancel();
     }
 
     protected void startBien8(int x){
         CDTbien[x] = new CountDownTimer(tempBien, interval3) {
             @Override
             public void onTick(long l) {
+                tempOn[16]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[16]=0;
                 mal[x].setVisibility(View.INVISIBLE);
                 typeMal[x] = 0;
             }
         }.start();
+    }
+
+    protected void pauseBien8(int x){
+        tempOn[16]=0;
+        CDTbien[x].cancel();
     }
 
     protected void startBien9(int x){
         CDTbien[x] = new CountDownTimer(tempBien, interval3) {
             @Override
             public void onTick(long l) {
+                tempOn[17]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[17]=0;
                 mal[x].setVisibility(View.INVISIBLE);
                 typeMal[x] = 0;
             }
         }.start();
     }
 
+    protected void pauseBien9(int x){
+        tempOn[17]=0;
+        CDTbien[x].cancel();
+    }
+
     protected void startTiempo1(){
         CDTmal[0] = new CountDownTimer(tempMal[0],interval2) {
             @Override
             public void onTick(long l) {
+                tempOn[0]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[0]=0;
                 mal[0].setVisibility(View.INVISIBLE);
                 typeMal[0] = 0;
                 contCor--;
@@ -452,6 +532,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempo1(){
+        tempOn[0]=0;
         CDTmal[0].cancel();
     }
 
@@ -459,10 +540,12 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTmal[1] = new CountDownTimer(tempMal[1],interval2) {
             @Override
             public void onTick(long l) {
+                tempOn[1]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[1]=0;
                 mal[1].setVisibility(View.INVISIBLE);
                 typeMal[1] = 0;
                 contCor--;
@@ -473,6 +556,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempo2(){
+        tempOn[1]=0;
         CDTmal[1].cancel();
     }
 
@@ -480,10 +564,12 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTmal[2] = new CountDownTimer(tempMal[2],interval2) {
             @Override
             public void onTick(long l) {
+                tempOn[2]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[2]=0;
                 mal[2].setVisibility(View.INVISIBLE);
                 typeMal[2] = 0;
                 contCor--;
@@ -494,6 +580,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempo3(){
+        tempOn[2]=0;
         CDTmal[2].cancel();
     }
 
@@ -501,10 +588,12 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTmal[3] = new CountDownTimer(tempMal[3],interval2) {
             @Override
             public void onTick(long l) {
+                tempOn[3]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[3]=0;
                 mal[3].setVisibility(View.INVISIBLE);
                 typeMal[3] = 0;
                 contCor--;
@@ -515,6 +604,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempo4(){
+        tempOn[3]=0;
         CDTmal[3].cancel();
     }
 
@@ -522,10 +612,12 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTmal[4] = new CountDownTimer(tempMal[4],interval2) {
             @Override
             public void onTick(long l) {
+                tempOn[4]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[4]=0;
                 mal[4].setVisibility(View.INVISIBLE);
                 typeMal[4] = 0;
                 contCor--;
@@ -536,6 +628,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempo5(){
+        tempOn[4]=0;
         CDTmal[4].cancel();
     }
 
@@ -543,10 +636,12 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTmal[5] = new CountDownTimer(tempMal[5],interval2) {
             @Override
             public void onTick(long l) {
+                tempOn[5]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[5]=0;
                 mal[5].setVisibility(View.INVISIBLE);
                 typeMal[5] = 0;
                 contCor--;
@@ -557,6 +652,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempo6(){
+        tempOn[5]=0;
         CDTmal[5].cancel();
     }
 
@@ -564,10 +660,12 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTmal[6] = new CountDownTimer(tempMal[6],interval2) {
             @Override
             public void onTick(long l) {
+                tempOn[6]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[6]=0;
                 mal[6].setVisibility(View.INVISIBLE);
                 typeMal[6] = 0;
                 contCor--;
@@ -578,6 +676,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempo7(){
+        tempOn[6]=0;
         CDTmal[6].cancel();
     }
 
@@ -585,10 +684,12 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTmal[7] = new CountDownTimer(tempMal[7],interval2) {
             @Override
             public void onTick(long l) {
+                tempOn[7]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[7]=0;
                 mal[7].setVisibility(View.INVISIBLE);
                 typeMal[7] = 0;
                 contCor--;
@@ -599,6 +700,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempo8(){
+        tempOn[7]=0;
         CDTmal[7].cancel();
     }
 
@@ -606,10 +708,12 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTmal[8] = new CountDownTimer(tempMal[8],interval2) {
             @Override
             public void onTick(long l) {
+                tempOn[8]=1;
             }
 
             @Override
             public void onFinish() {
+                tempOn[8]=0;
                 mal[8].setVisibility(View.INVISIBLE);
                 typeMal[8] = 0;
                 contCor--;
@@ -620,6 +724,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void pauseTiempo9(){
+        tempOn[8]=0;
         CDTmal[8].cancel();
     }
 
@@ -638,8 +743,21 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void iniContClick(){
+        int i;
         for(i=0;i<contClick.length;i++){
             contClick[i]=0;
+        }
+    }
+
+    protected void iniTempOn(){
+        int i;
+        /*De la posición 0 a la 8 hace referencia a los temporizadores CDTmal
+        * De la posición 9 a la 17 hace referencia a los temporizadores CDTbien
+        * La posición 18 y 19 hacen referencia a los temporizadores CDTG1 y CDTG2
+        * Finalmente la posición 20 hace referencia al temporizacor CDTNueva */
+        for(i=0;i<tempOn.length;i++){
+            tempOn[i]=0;
+            //Si tempOn[i]=0 significa que el temporizador no está activo
         }
     }
 
@@ -841,18 +959,27 @@ public class JuegoCheckIn extends AppCompatActivity {
             cor3.setVisibility(View.INVISIBLE);
         }
         else{
-            pauseTiempoG1();
-            pauseTiempoG2();
-            pauseNueva();
-            pauseTiempo1();
-            pauseTiempo2();
-            pauseTiempo3();
-            pauseTiempo4();
-            pauseTiempo5();
-            pauseTiempo6();
-            pauseTiempo7();
-            pauseTiempo8();
-            pauseTiempo9();
+            if(tempOn[0]==1) pauseTiempo1();
+            if(tempOn[1]==1) pauseTiempo2();
+            if(tempOn[2]==1) pauseTiempo3();
+            if(tempOn[3]==1) pauseTiempo4();
+            if(tempOn[4]==1) pauseTiempo5();
+            if(tempOn[5]==1) pauseTiempo6();
+            if(tempOn[6]==1) pauseTiempo7();
+            if(tempOn[7]==1) pauseTiempo8();
+            if(tempOn[8]==1) pauseTiempo9();
+            if(tempOn[9]==1) pauseBien1(0);
+            if(tempOn[10]==1) pauseBien2(1);
+            if(tempOn[11]==1) pauseBien3(2);
+            if(tempOn[12]==1) pauseBien4(3);
+            if(tempOn[13]==1) pauseBien5(4);
+            if(tempOn[14]==1) pauseBien6(5);
+            if(tempOn[15]==1) pauseBien7(6);
+            if(tempOn[16]==1) pauseBien8(7);
+            if(tempOn[17]==1) pauseBien9(8);
+            if(tempOn[18]==1) pauseTiempoG1();
+            if(tempOn[19]==1) pauseTiempoG2();
+            if(tempOn[20]==1) pauseNueva();
             newRecord();
             for(j=0;j<mal.length;j++){
                 mal[j].setVisibility(View.INVISIBLE);
