@@ -870,14 +870,14 @@ public class JuegoCheckIn extends AppCompatActivity {
             editor.commit();
         }
         else{
-            if(nombre2.isEmpty() && nombre!=nombre1){
+            if(nombre2.isEmpty()){
                 editor.putString("NOMBRE2",nombre);
                 editor.putLong("TIEMP2",temp);
                 editor.putInt("NUMC2",numClicks);
                 editor.commit();
             }
             else{
-                if(nombre3.isEmpty() && nombre!=nombre2 && nombre!=nombre1){
+                if(nombre3.isEmpty()){
                     editor.putString("NOMBRE3",nombre);
                     editor.putLong("TIEMP3",temp);
                     editor.putInt("NUMC3",numClicks);
@@ -888,14 +888,12 @@ public class JuegoCheckIn extends AppCompatActivity {
                         editor.putString("NOMBRE1",nombre);
                         editor.putLong("TIEMP1",temp);
                         editor.putInt("NUMC1",numClicks);
-                        if(nombre!=nombre1){
-                            editor.putString("NOMBRE2",nombre1);
-                            editor.putLong("TIEMP2",tiemp1);
-                            editor.putInt("NUMC2",numC1);
-                            editor.putString("NOMBRE3",nombre2);
-                            editor.putLong("TIEMP3",tiemp2);
-                            editor.putInt("NUMC3",numC2);
-                        }
+                        editor.putString("NOMBRE2",nombre1);
+                        editor.putLong("TIEMP2",tiemp1);
+                        editor.putInt("NUMC2",numC1);
+                        editor.putString("NOMBRE3",nombre2);
+                        editor.putLong("TIEMP3",tiemp2);
+                        editor.putInt("NUMC3",numC2);
                         editor.commit();
                     }
                     else{
@@ -903,11 +901,9 @@ public class JuegoCheckIn extends AppCompatActivity {
                             editor.putString("NOMBRE2",nombre);
                             editor.putLong("TIEMP2",temp);
                             editor.putInt("NUMC2",numClicks);
-                            if(nombre!=nombre2){
-                                editor.putString("NOMBRE3",nombre2);
-                                editor.putLong("TIEMP3",tiemp2);
-                                editor.putInt("NUMC3",numC2);
-                            }
+                            editor.putString("NOMBRE3",nombre2);
+                            editor.putLong("TIEMP3",tiemp2);
+                            editor.putInt("NUMC3",numC2);
                             editor.commit();
                         }
                         else{
