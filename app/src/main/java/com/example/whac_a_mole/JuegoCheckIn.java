@@ -22,14 +22,14 @@ public class JuegoCheckIn extends AppCompatActivity {
     protected TextView tiempo, gameOver, tiempoFinal;
     protected int[] typeMal = new int[9];
     protected int[] contClick = new int[9];
-    protected int[] tempOn = new int[21];
+    protected int[] tempOn = new int[20];
     protected int contCor = 3, ranNum, idAcierto, idFallo, idInicio, idFin, numClicks;
     protected long[] tempMal = new long[9];
     protected static final long tCDTG = 10000, interval = 1000, interval2 = 200, interval3 = 100;
     protected long temp, tempBien = 500, tempNueva = 1500, tVerd = 2000, tAmar = 3000, tRoja = 4000, tNegra = 5000, tiemp1, tiemp2, tiemp3;
     protected CountDownTimer[] CDTmal = new CountDownTimer[9];
     protected CountDownTimer[] CDTbien = new CountDownTimer[9];
-    protected CountDownTimer CDTG1, CDTG2, CDTNueva;
+    protected CountDownTimer CDTG1, CDTNueva;
     protected Button volver;
     protected SoundPool sp;
     protected float volumeEf, volumeM;
@@ -261,7 +261,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 if(tempNueva>100) tempNueva -= 100;
                 tempOn[18]=0;
 
-                startTiempoG2();
+                startTiempoG1();
             }
         }.start();
     }
@@ -271,39 +271,11 @@ public class JuegoCheckIn extends AppCompatActivity {
         CDTG1.cancel();
     }
 
-    protected void startTiempoG2(){
-        CDTG1 = new CountDownTimer(tCDTG,interval) {
-            @Override
-            public void onTick(long l) {
-                temp++;
-                tiempo.setText(Long.toString(temp));
-                tempOn[19]=1;
-            }
-
-            @Override
-            public void onFinish() {
-                if(tVerd>200) tVerd -= 200;
-                if(tAmar>200) tAmar -= 200;
-                if(tRoja>200) tRoja -= 200;
-                if(tNegra>200)  tNegra -= 200;
-                if(tempNueva>100) tempNueva -= 100;
-                tempOn[19]=0;
-
-                startTiempoG1();
-            }
-        }.start();
-    }
-
-    protected void pauseTiempoG2(){
-        tempOn[19]=0;
-        CDTG2.cancel();
-    }
-
     protected void startNueva(){
         CDTNueva = new CountDownTimer(tempNueva, interval3) {
             @Override
             public void onTick(long l) {
-                tempOn[20]=1;
+                tempOn[19]=1;
             }
 
             @Override
@@ -312,14 +284,14 @@ public class JuegoCheckIn extends AppCompatActivity {
                 while(typeMal[ranNum]!=0){
                     ranNum = (int)(Math.random()*9);
                 }
-                tempOn[20]=0;
+                tempOn[19]=0;
                 setMal(ranNum);
             }
         }.start();
     }
 
     protected void pauseNueva(){
-        tempOn[20]=0;
+        tempOn[19]=0;
         CDTNueva.cancel();
     }
 
@@ -978,8 +950,7 @@ public class JuegoCheckIn extends AppCompatActivity {
             if(tempOn[16]==1) pauseBien8(7);
             if(tempOn[17]==1) pauseBien9(8);
             if(tempOn[18]==1) pauseTiempoG1();
-            if(tempOn[19]==1) pauseTiempoG2();
-            if(tempOn[20]==1) pauseNueva();
+            if(tempOn[19]==1) pauseNueva();
             newRecord();
             for(j=0;j<mal.length;j++){
                 mal[j].setVisibility(View.INVISIBLE);
