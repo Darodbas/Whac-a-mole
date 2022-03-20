@@ -853,10 +853,10 @@ public class JuegoCheckIn extends AppCompatActivity {
         SharedPreferences records = getSharedPreferences("RECORDS",MODE_PRIVATE);
         SharedPreferences.Editor editor = records.edit();
 
-        nombre = records.getString("NOMBRE", "");
-        nombre1 = records.getString("NOMBRECH1", "");
-        nombre2 = records.getString("NOMBRECH2", "");
-        nombre3 = records.getString("NOMBRECH3", "");
+        nombre = records.getString("NOMBRE", " ");
+        nombre1 = records.getString("NOMBRE1", "");
+        nombre2 = records.getString("NOMBRE2", "");
+        nombre3 = records.getString("NOMBRE3", "");
         tiemp1 = records.getLong("TIEMP1", 0);
         tiemp2 = records.getLong("TIEMP2", 0);
         tiemp3 = records.getLong("TIEMP3", 0);
@@ -870,14 +870,14 @@ public class JuegoCheckIn extends AppCompatActivity {
             editor.commit();
         }
         else{
-            if(nombre2.isEmpty()){
+            if(nombre2.isEmpty() && nombre!=nombre1){
                 editor.putString("NOMBRE2",nombre);
                 editor.putLong("TIEMP2",temp);
                 editor.putInt("NUMC2",numClicks);
                 editor.commit();
             }
             else{
-                if(nombre3.isEmpty()){
+                if(nombre3.isEmpty() && nombre!=nombre2 && nombre!=nombre1){
                     editor.putString("NOMBRE3",nombre);
                     editor.putLong("TIEMP3",temp);
                     editor.putInt("NUMC3",numClicks);
@@ -888,12 +888,14 @@ public class JuegoCheckIn extends AppCompatActivity {
                         editor.putString("NOMBRE1",nombre);
                         editor.putLong("TIEMP1",temp);
                         editor.putInt("NUMC1",numClicks);
-                        editor.putString("NOMBRE2",nombre1);
-                        editor.putLong("TIEMP2",tiemp1);
-                        editor.putInt("NUMC2",numC1);
-                        editor.putString("NOMBRE3",nombre2);
-                        editor.putLong("TIEMP3",tiemp2);
-                        editor.putInt("NUMC3",numC2);
+                        if(nombre!=nombre1){
+                            editor.putString("NOMBRE2",nombre1);
+                            editor.putLong("TIEMP2",tiemp1);
+                            editor.putInt("NUMC2",numC1);
+                            editor.putString("NOMBRE3",nombre2);
+                            editor.putLong("TIEMP3",tiemp2);
+                            editor.putInt("NUMC3",numC2);
+                        }
                         editor.commit();
                     }
                     else{
@@ -901,9 +903,11 @@ public class JuegoCheckIn extends AppCompatActivity {
                             editor.putString("NOMBRE2",nombre);
                             editor.putLong("TIEMP2",temp);
                             editor.putInt("NUMC2",numClicks);
-                            editor.putString("NOMBRE3",nombre2);
-                            editor.putLong("TIEMP3",tiemp2);
-                            editor.putInt("NUMC3",numC2);
+                            if(nombre!=nombre2){
+                                editor.putString("NOMBRE3",nombre2);
+                                editor.putLong("TIEMP3",tiemp2);
+                                editor.putInt("NUMC3",numC2);
+                            }
                             editor.commit();
                         }
                         else{

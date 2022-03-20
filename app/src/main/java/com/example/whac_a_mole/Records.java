@@ -78,23 +78,23 @@ public class Records extends AppCompatActivity {
         }
 
         if(records.getLong("TIEMP1",-1)!=-1) {
-            tvCheckInPuntuacion[0].setText("Tiempo: "+Long.toString(records.getLong("TIEMP1",-1)));
+            tvCheckInPuntuacion[0].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP1",-1)));
         }
         if(records.getLong("TIEMP2",-1)!=-1) {
-            tvCheckInPuntuacion[1].setText("Tiempo: "+Long.toString(records.getLong("TIEMP2",-1)));
+            tvCheckInPuntuacion[1].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP2",-1)));
         }
         if(records.getLong("TIEMP3",-1)!=-1) {
-            tvCheckInPuntuacion[2].setText("Tiempo: "+Long.toString(records.getLong("TIEMP3",-1)));
+            tvCheckInPuntuacion[2].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP3",-1)));
         }
 
         if(records.getInt("NUMC1",-1)!=-1) {
-            tvCheckInClicks[0].setText("Num. Clicks: "+Long.toString(records.getLong("NUMC1",-1)));
+            tvCheckInClicks[0].setText("Num. Clicks: "+Integer.toString(records.getInt("NUMC1",-1)));
         }
         if(records.getInt("NUMC2",-1)!=-1) {
-            tvCheckInClicks[1].setText("Num. Clicks: "+Long.toString(records.getLong("NUMC2",-1)));
+            tvCheckInClicks[1].setText("Num. Clicks: "+Integer.toString(records.getInt("NUMC2",-1)));
         }
         if(records.getInt("NUMC3",-1)!=-1) {
-            tvCheckInClicks[2].setText("Num. Clicks: "+Long.toString(records.getLong("NUMC3",-1)));
+            tvCheckInClicks[2].setText("Num. Clicks: "+Integer.toString(records.getInt("NUMC3",-1)));
         }
 
         ivSalirRecords.setOnClickListener(new View.OnClickListener() {
