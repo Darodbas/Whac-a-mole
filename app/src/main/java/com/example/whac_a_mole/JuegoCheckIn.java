@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -35,12 +36,17 @@ public class JuegoCheckIn extends AppCompatActivity {
     protected SoundPool sp;
     protected float volumeEf, volumeM;
 
+    protected long tiempoAnimacion =50;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego_check_in);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
+        //Para que la barra de navegacion y de notificaciones tenga el color de la App
+        getWindow().setNavigationBarColor(Color.rgb(0,59,113));
+        getWindow().setStatusBarColor(Color.rgb(0,59,113));
 
         mal[0] = findViewById(R.id.mal1);
         mal[1] = findViewById(R.id.mal2);
@@ -95,7 +101,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         idAcierto = sp.load(this, R.raw.acierto, 1);
         idFallo = sp.load(this, R.raw.fallo, 1);
         idInicio = sp.load(this, R.raw.megafonia, 1);
-        idFin = sp.load(this, R.raw.megafoniasalir, 1);
+        idFin = sp.load(this, R.raw.finalpartida, 1);
 
         sp.play(idInicio, volumeEf, volumeEf, 1, 0, 1);
 
@@ -746,14 +752,54 @@ public class JuegoCheckIn extends AppCompatActivity {
     }
 
     protected void isClicked(int x) {
+
+        CountDownTimer cuentaAnimación[] = new CountDownTimer[9];//vector de cuentas atras Falta añadir un sonido cada vez que se le da a cada maleta!!
+
+
         if(typeMal[x]==0);
         else if(typeMal[x]==1){
+
+            mal[x].setScaleY((float) 1.2); //prueba animacion
+            mal[x].setScaleX((float) 1.2);
+            // AQUI VA EL SONIDO A PONER//
+
+            cuentaAnimación[x]=new CountDownTimer(tiempoAnimacion,10) {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    mal[x].setScaleY((float) 1);
+                    mal[x].setScaleX((float) 1);
+                }
+            }.start(); // Solo he añadido hasta aquí
+
             mal[x].setImageResource(R.drawable.maleta_verde_facturada);
             sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
             typeMal[x] = 5;
         }
         else if(typeMal[x]==2){
             contClick[x]++;
+
+            mal[x].setScaleY((float) 1.2); //prueba animacion
+            mal[x].setScaleX((float) 1.2);
+            // AQUI VA EL SONIDO A PONER//
+
+            cuentaAnimación[x]=new CountDownTimer(tiempoAnimacion,10) {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    mal[x].setScaleY((float) 1);
+                    mal[x].setScaleX((float) 1);
+                }
+            }.start(); // Solo he añadido hasta aquí
+
             if(contClick[x]==3){
                 mal[x].setImageResource(R.drawable.maleta_amarilla_facturada);
                 sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
@@ -763,6 +809,26 @@ public class JuegoCheckIn extends AppCompatActivity {
         }
         else if(typeMal[x]==3){
             contClick[x]++;
+
+            mal[x].setScaleY((float) 1.2); //prueba animacion
+            mal[x].setScaleX((float) 1.2);
+            // AQUI VA EL SONIDO A PONER//
+
+            cuentaAnimación[x]=new CountDownTimer(tiempoAnimacion,10) {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    mal[x].setScaleY((float) 1);
+                    mal[x].setScaleX((float) 1);
+                }
+            }.start(); // Solo he añadido hasta aquí
+
+
+
             if(contClick[x]==5){
                 mal[x].setImageResource(R.drawable.maleta_roja_facturada);
                 sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
@@ -772,6 +838,24 @@ public class JuegoCheckIn extends AppCompatActivity {
         }
         else if(typeMal[x]==4){
             contClick[x]++;
+
+            mal[x].setScaleY((float) 1.2); //prueba animacion
+            mal[x].setScaleX((float) 1.2);
+            // AQUI VA EL SONIDO A PONER//
+
+            cuentaAnimación[x]=new CountDownTimer(tiempoAnimacion,10) {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    mal[x].setScaleY((float) 1);
+                    mal[x].setScaleX((float) 1);
+                }
+            }.start(); // Solo he añadido hasta aquí
+
             if(contClick[x]==10){
                 mal[x].setImageResource(R.drawable.maleta_negra_facturada);
                 sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
@@ -969,8 +1053,11 @@ public class JuegoCheckIn extends AppCompatActivity {
             for(j=0;j<mal.length;j++){
                 mal[j].setVisibility(View.INVISIBLE);
             }
-            sp.play(idFin, volumeEf, volumeEf, 1, 0, 1);
+            sp.play(idFin, volumeEf, volumeEf, 1, 0, 1);//recomendado volumen 0.02
             gameOver.setVisibility(View.VISIBLE);
+
+            //Añadir portapapeles con resultados//
+
             tiempoFinal.setText("Enhorabuena, has aguantado "+Long.toString(temp)+" segundos");
             volver.setVisibility(View.VISIBLE);
         }

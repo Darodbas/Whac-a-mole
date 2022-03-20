@@ -124,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
+        getWindow().setStatusBarColor(Color.rgb(255,255,255));
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//  text status negro
+        //getWindow().setNavigationBarColor(Color.rgb(255,255,255));
 
 
         btJugar = findViewById(R.id.btJugar);

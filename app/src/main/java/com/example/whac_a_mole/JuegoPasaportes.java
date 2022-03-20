@@ -33,13 +33,13 @@ public class JuegoPasaportes extends AppCompatActivity {
     protected long tiempoRestante;
     protected long tiempoCortesia=200;
     protected long tiempoSello=300;//original = 500; optimizado = 300
-    //protected SharedPreferences opcionesPasaportes= getSharedPreferences("OPCIONESPASAPORTES",MODE_PRIVATE);
+
 
     protected SoundPool sp;
     protected int idAcierto,idFallo,idStamp,idFinalPartida,idBeep,idFinalBeep;
 
 
-
+//Podría haber sido vector de ImageView
     protected ImageView ivPas1;
     protected ImageView ivPas2;
     protected ImageView ivPas3;
@@ -287,7 +287,7 @@ public class JuegoPasaportes extends AppCompatActivity {
     //Funcion timer Por pantalla los intervalos siempre son 1s
     protected void startPantTimer(){
         tiempoRestante=tiempoMilisegundos;
-        //countDownInterval: Tiempo que tarda en generarse* un nuevo pasaporte (puede no generarse si toca una posicion que esta ocupada)
+
         CDTpant = new CountDownTimer(tiempoMilisegundos, 1000) {
             @Override
             public void onTick(long l) {
@@ -2524,6 +2524,8 @@ public class JuegoPasaportes extends AppCompatActivity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
+        getWindow().setNavigationBarColor(Color.rgb(0,59,113));
+        getWindow().setStatusBarColor(Color.rgb(0,59,113));
 
 
         ivPas1=findViewById(R.id.ivPas1);
@@ -2615,8 +2617,8 @@ public class JuegoPasaportes extends AppCompatActivity {
             intervalAparicionPas=1000;
             tiempoDesaparecePas=1000;
         }else if(dificultad==2){
-            intervalAparicionPas=500;
-            tiempoDesaparecePas=800;
+            intervalAparicionPas=400;
+            tiempoDesaparecePas=900;
         }
 
 

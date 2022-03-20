@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +26,8 @@ public class Records extends AppCompatActivity {
         setContentView(R.layout.activity_records);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
+        getWindow().setNavigationBarColor(Color.rgb(44,120,138));
+        getWindow().setStatusBarColor(Color.rgb(44,120,138));
 
         ivSalirRecords=findViewById(R.id.ivSalirRecords);
 
