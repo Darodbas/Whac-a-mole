@@ -770,7 +770,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         }
         else if(typeMal[x]==2){
             contClick[x]++;
-            if(contClick[x]==5){
+            if(contClick[x]==3){
                 mal[x].setImageResource(R.drawable.maleta_amarilla_facturada);
                 sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
                 typeMal[x] = 5;
@@ -779,7 +779,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         }
         else if(typeMal[x]==3){
             contClick[x]++;
-            if(contClick[x]==10){
+            if(contClick[x]==5){
                 mal[x].setImageResource(R.drawable.maleta_roja_facturada);
                 sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
                 typeMal[x] = 5;
@@ -788,7 +788,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         }
         else if(typeMal[x]==4){
             contClick[x]++;
-            if(contClick[x]==20){
+            if(contClick[x]==10){
                 mal[x].setImageResource(R.drawable.maleta_negra_facturada);
                 sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
                 typeMal[x] = 5;
