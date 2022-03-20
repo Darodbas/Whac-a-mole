@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         //ponemos el Nombre anterior si hay
         SharedPreferences records = getSharedPreferences("RECORDS", MODE_PRIVATE);
         SharedPreferences.Editor editor = records.edit();
-        etNombre.setText(records.getString("NOMBRE"," "));
+        etNombre.setText(records.getString("NOMBRE",""));
 
         SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS", MODE_PRIVATE);
 
