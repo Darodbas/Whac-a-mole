@@ -43,12 +43,21 @@ public class Opciones extends AppCompatActivity {
                                 editor.putString("NOMBREPAS1","");
                                 editor.putString("NOMBREPAS2","");
                                 editor.putString("NOMBREPAS3","");
+                                editor.putString("NOMBRE1","");
+                                editor.putString("NOMBRE2","");
+                                editor.putString("NOMBRE3","");
                                 editor.putInt("PUNTUACIONPAS1",-1);
                                 editor.putInt("PUNTUACIONPAS2",-1);
                                 editor.putInt("PUNTUACIONPAS3",-1);
+                                editor.putLong("TIEMP1",-1);
+                                editor.putLong("TIEMP2",-1);
+                                editor.putLong("TIEMP3",-1);
                                 editor.putInt("COMBOPAS1",-1);
                                 editor.putInt("COMBOPAS2",-1);
                                 editor.putInt("COMBOPAS3",-1);
+                                editor.putInt("NUMC1",-1);
+                                editor.putInt("NUMC2",-1);
+                                editor.putInt("NUMC3",-1);
 
                                 editor.commit();
 
