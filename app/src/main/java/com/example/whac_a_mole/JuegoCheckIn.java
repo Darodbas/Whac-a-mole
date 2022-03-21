@@ -938,7 +938,7 @@ public class JuegoCheckIn extends AppCompatActivity {
 
     protected void newRecord(){
         String nombre, nombre1,nombre2,nombre3;
-        int numC1, numC2;
+        int numC1, numC2, numC3;
         SharedPreferences records = getSharedPreferences("RECORDS",MODE_PRIVATE);
         SharedPreferences.Editor editor = records.edit();
 
@@ -946,13 +946,14 @@ public class JuegoCheckIn extends AppCompatActivity {
         nombre1 = records.getString("NOMBRE1", "");
         nombre2 = records.getString("NOMBRE2", "");
         nombre3 = records.getString("NOMBRE3", "");
-        tiemp1 = records.getLong("TIEMP1", 0);
-        tiemp2 = records.getLong("TIEMP2", 0);
-        tiemp3 = records.getLong("TIEMP3", 0);
-        numC1 = records.getInt("NUMC1",0);
-        numC2 = records.getInt("NUMC2",0);
+        tiemp1 = records.getLong("TIEMP1", -1);
+        tiemp2 = records.getLong("TIEMP2", -1);
+        tiemp3 = records.getLong("TIEMP3", -1);
+        numC1 = records.getInt("NUMC1",-1);
+        numC2 = records.getInt("NUMC2",-1);
+        numC3 = records.getInt("NUMC3",-1);
 
-        if(nombre!="Jugador"){
+        /*if(nombre!="Jugador"){
             if(nombre1.isEmpty()){
                 editor.putString("NOMBRE1",nombre);
                 editor.putLong("TIEMP1",temp);
@@ -972,9 +973,10 @@ public class JuegoCheckIn extends AppCompatActivity {
                         editor.putLong("TIEMP3",temp);
                         editor.putInt("NUMC3",numClicks);
                         editor.commit();
-                    }
-                    else{
-                        if(temp>tiemp1){
+                    }*/                                         //Sobra, Si el nombre es Jugador hay que ponerlo igual y no hace falta comprobar si esta vacío porque el tiempo y clics serán -1 y siempre será mayor, esto es lo que daba problemas
+
+
+                        if(temp>tiemp1     ||    (temp==tiemp1)&&numClicks>numC1     ){ //si los tiempos son iguales se desempata por el numero de clics
                             editor.putString("NOMBRE1",nombre);
                             editor.putLong("TIEMP1",temp);
                             editor.putInt("NUMC1",numClicks);
@@ -986,8 +988,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                             editor.putInt("NUMC3",numC2);
                             editor.commit();
                         }
-                        else{
-                            if(temp>tiemp2){
+                        else if(temp>tiemp2      ||    (temp==tiemp2)&&numClicks>numC2){
                                 editor.putString("NOMBRE2",nombre);
                                 editor.putLong("TIEMP2",temp);
                                 editor.putInt("NUMC2",numClicks);
@@ -996,20 +997,15 @@ public class JuegoCheckIn extends AppCompatActivity {
                                 editor.putInt("NUMC3",numC2);
                                 editor.commit();
                             }
-                            else{
-                                if(temp>tiemp3){
+                            else if(temp>tiemp3      ||    (temp==tiemp3)&&numClicks>numC3){
                                     editor.putString("NOMBRE3",nombre);
                                     editor.putLong("TIEMP3",temp);
                                     editor.putInt("NUMC3",numClicks);
                                     editor.commit();
                                 }
                             }
-                        }
-                    }
-                }
-            }
-        }
-    }
+
+
 
     protected void isGameOver(){
         int j;
