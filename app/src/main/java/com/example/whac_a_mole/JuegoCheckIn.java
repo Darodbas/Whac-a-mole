@@ -20,24 +20,26 @@ import android.widget.TextView;
 
 public class JuegoCheckIn extends AppCompatActivity {
 
+
     protected ImageView[] mal = new ImageView[9];
     protected ImageView cor1, cor2, cor3,ivPortafoliocheckin;
     protected TextView tiempo, gameOver, tiempoFinal,tvClicksTotales,tvMaletasVerdes,tvMaletasAmarillas,tvMaletasRojas,tvMaletasNegras;
     protected int[] typeMal = new int[9];
     protected int[] contClick = new int[9];
     protected int[] tempOn = new int[20];
-    protected int contCor = 3, ranNum, idAcierto, idFallo, idInicio, idFin, numClicks, idMegafoniaFin;
+    protected int contCor = 3, ranNum, idAcierto, idFallo, idInicio, idFin, numClicks, idMegafoniaFin,idBeep,idFinalBeep ;
     protected long[] tempMal = new long[9];
     protected static final long tCDTG = 20000, interval = 1000, interval2 = 200, interval3 = 100;
     protected long temp, tempBien = 500, tempNueva = 1500, tVerd = 2000, tAmar = 3000, tRoja = 4000, tNegra = 5000, tiemp1, tiemp2, tiemp3;
     protected CountDownTimer[] CDTmal = new CountDownTimer[9];
     protected CountDownTimer[] CDTbien = new CountDownTimer[9];
-    protected CountDownTimer CDTG1, CDTNueva;
+    protected CountDownTimer CDTG1, CDTNueva,cuentaAtras;
     protected Button volver;
     protected SoundPool sp;
     protected float volumeEf, volumeM, volumeEfMeg;
     protected int contVerdes=0,contAmarillas=0,contRojas=0,contNegras=0;
-    protected boolean  backPressed=false,musicaParada=false;
+    protected boolean  backPressed=false,musicaParada=false,cuentaAtrasOn=true;
+    protected int t;//solo se utiliza en la cuenta atras
 
     MediaPlayer mp;
 
@@ -78,13 +80,35 @@ public class JuegoCheckIn extends AppCompatActivity {
         tvMaletasRojas = findViewById(R.id.tvMaletasRojas);
         tvMaletasNegras = findViewById(R.id.tvMaletasNegras);
 
+    //ocultamos las maletas
+        for(int i=0;i<9;i++){
+            mal[i].setVisibility(View.INVISIBLE);
+        }
 
-        SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
+        //sonidos
+        AudioAttributes audioAttributes = new
+                AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(
+                AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+
+        sp = new SoundPool.Builder().setMaxStreams(5).setAudioAttributes(audioAttributes).build();
+
+        idAcierto = sp.load(this, R.raw.acierto, 1);
+        idFallo = sp.load(this, R.raw.fallo, 1);
+        idInicio = sp.load(this, R.raw.megafonia, 1);
+        idFin = sp.load(this, R.raw.finalpartida, 1);
+        idMegafoniaFin = sp.load(this, R.raw.megafoniasalir, 1);
+        idBeep = sp.load(this, R.raw.beep, 1);
+        idFinalBeep = sp.load(this, R.raw.finalbeep, 1);
+
+
 
         temp = 0;
         numClicks = 0;
         tiempo.setText("0");
-        iniMal();
+        //Empezamos con cuenta atras y cuando termine comenzará el juego
+        CuentaAtras();
+
+        /*iniMal();
         iniContClick();
         iniTempOn();
 
@@ -113,18 +137,9 @@ public class JuegoCheckIn extends AppCompatActivity {
         mp.setLooping(true);
         mp.start();
 
-        //sonidos
-        AudioAttributes audioAttributes = new
-                AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(
-                AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+        */ //Esto se incluye en el finish de la cuenta atras
 
-        sp = new SoundPool.Builder().setMaxStreams(5).setAudioAttributes(audioAttributes).build();
 
-        idAcierto = sp.load(this, R.raw.acierto, 1);
-        idFallo = sp.load(this, R.raw.fallo, 1);
-        idInicio = sp.load(this, R.raw.megafonia, 1);
-        idFin = sp.load(this, R.raw.finalpartida, 1);
-        idMegafoniaFin = sp.load(this, R.raw.megafoniasalir, 1);
 
 
         mal[0].setOnClickListener(new View.OnClickListener() {
@@ -265,7 +280,15 @@ public class JuegoCheckIn extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(!backPressed){
+
+                if(cuentaAtrasOn){
+                    cuentaAtras.cancel();
+                    Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
+                    mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mi_intent);
+                    finish();
+
+                }else if(!backPressed){
                     sp.play(idMegafoniaFin, volumeEfMeg, volumeEfMeg, 1, 0, 1);
                     CountDownTimer esperaMegafono = new CountDownTimer(2500,500) {
                         @Override
@@ -294,10 +317,14 @@ public class JuegoCheckIn extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        if(!musicaParada){ //no se puede comprobar isPlaying despues de un Release//
-            mp.stop();
-            mp.release();
+
+        if(!cuentaAtrasOn){
+            if(!musicaParada){ //no se puede comprobar isPlaying despues de un Release//
+                mp.stop();
+                mp.release();
+            }
         }
+
         contCor=-1;
         isGameOver(true);
         backPressed=true;
@@ -1102,5 +1129,66 @@ public class JuegoCheckIn extends AppCompatActivity {
 
             }
         }
+    }
+    //Cuenta atras al empezar
+    protected void CuentaAtras(){
+        SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
+        if(preferencias.getBoolean("EFECTOS",true)){
+            volumeEf = 1;
+            volumeEfMeg = 0.3f;//
+        }
+        else{
+            volumeEf = 0.0f;
+            volumeEfMeg = 0.0f;
+        }
+
+        if(preferencias.getBoolean("MUSICA", true)){
+            volumeM = 0.05f;
+        }
+        else{
+            volumeM = 0.0F;
+        }
+        t=3;
+
+
+        tiempo.setTextColor(Color.GREEN);
+        cuentaAtras = new CountDownTimer(4000,1000) {
+            @Override
+            public void onTick(long l) {
+
+                if(t>0){
+                    tiempo.setText(Integer.toString(t));
+                    sp.play(idBeep, (float) (volumeEf*0.02), (float) (volumeEf*0.02), 1, 0, 1);
+                    t--;
+                }else{
+                    tiempo.setText("¡YA!");
+                    sp.play(idFinalBeep, (float) (volumeEf*0.02), (float) (volumeEf*0.02), 1, 0, 1);
+                }
+
+            }
+
+            @Override
+            public void onFinish() {
+                cuentaAtrasOn=false;
+                tiempo.setTextColor(Color.rgb(166,237,255));
+                iniMal();
+                iniContClick();
+                iniTempOn();
+
+                startTiempoG1();
+                ranNum = (int) (Math.random() * 9);
+                setMal(ranNum);
+
+
+
+                mp = MediaPlayer.create(JuegoCheckIn.this, R.raw.musicajuegos);
+                mp.setVolume(volumeM, volumeM);
+                mp.setLooping(true);
+                mp.start();
+
+            }
+        }.start();
+
+
     }
 }
