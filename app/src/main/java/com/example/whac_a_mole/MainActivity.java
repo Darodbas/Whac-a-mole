@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
     protected EditText etNombre;
     protected int aceptaSinNombre=0,musicaSonando=1;
     protected boolean btpas,btfac;
-    protected float volumeM;
+    protected float volumeM= (float) 0.05;
+    protected float volumeMeg= (float) 0.02;
 
 
     //Se muestra un mensaje al pulsar info
@@ -152,12 +153,8 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS", MODE_PRIVATE);
 
-        if(preferencias.getBoolean("MUSICA", true)){
-            volumeM = 0.05f;
-        }
-        else{
-            volumeM = 0.0F;
-        }
+
+
 
         MediaPlayer mpMusica= MediaPlayer.create (MainActivity.this, R.raw.menuinicio);
         mpMusica.setVolume(volumeM, volumeM);
@@ -205,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                     if (preferencias.getBoolean("EFECTOS", true)) {
 
                         MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
-                        mpMegafonia.setVolume(0.01f, 0.01f);
+                        mpMegafonia.setVolume(volumeMeg, volumeMeg);
                         mpMegafonia.start();
                         btpas=true;
 
@@ -279,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                             MediaPlayer mpMegafonia = MediaPlayer.create(MainActivity.this, R.raw.megafonia);
-                            mpMegafonia.setVolume(0.01f, 0.01f);
+                            mpMegafonia.setVolume(volumeMeg, volumeMeg);
                             mpMegafonia.start();
                             btfac=true;
 

@@ -37,6 +37,9 @@ public class JuegoPasaportes extends AppCompatActivity {
 
     protected SoundPool sp;
     protected int idAcierto,idFallo,idStamp,idFinalPartida,idBeep,idFinalBeep;
+    protected float volumeMeg= (float) 0.02;
+    protected float volumeM= (float) 0.05;
+    protected boolean backPressed=false;
 
 
 //Podría haber sido vector de ImageView
@@ -250,11 +253,11 @@ public class JuegoPasaportes extends AppCompatActivity {
 
                 if(t>0){
                     tvCountdown.setText(Integer.toString(t));
-                    sp.play(idBeep, (float) (volume*0.01), (float) (volume*0.01), 1, 0, 1);
+                    sp.play(idBeep, (float) (volume*0.02), (float) (volume*0.02), 1, 0, 1);
                     t--;
                 }else{
                     tvCountdown.setText("¡YA!");
-                    sp.play(idFinalBeep, (float) (volume*0.01), (float) (volume*0.01), 1, 0, 1);
+                    sp.play(idFinalBeep, (float) (volume*0.02), (float) (volume*0.02), 1, 0, 1);
                 }
 
             }
@@ -273,7 +276,7 @@ public class JuegoPasaportes extends AppCompatActivity {
                 SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
 
                 if(preferencias.getBoolean("MUSICA",true)){
-                    mpMusica.setVolume(0.05f, 0.05f);
+                    mpMusica.setVolume(volumeM, volumeM);
                     mpMusica.setLooping(true);
                     mpMusica.start();
                 }
@@ -2512,7 +2515,7 @@ public class JuegoPasaportes extends AppCompatActivity {
         //si se pulsa atras se cierra y se limpia
 
      public void onBackPressed(){
-
+        backPressed=true;
          btVolver.performClick();
 
      }
@@ -2751,13 +2754,13 @@ public class JuegoPasaportes extends AppCompatActivity {
             }
 
 
-            if( estadoGlobal==0 && preferencias.getBoolean("EFECTOS",true)) {
+            if( estadoGlobal==0 && preferencias.getBoolean("EFECTOS",true)&&!backPressed) {
                 MediaPlayer mpMegafoniaSalir = MediaPlayer.create(JuegoPasaportes.this, R.raw.megafoniasalir);
-                mpMegafoniaSalir.setVolume(0.01f, 0.01f);
+                mpMegafoniaSalir.setVolume(volumeMeg, volumeMeg);
                 mpMegafoniaSalir.start();
 
 
-                CountDownTimer esperaMegafono = new CountDownTimer(2000,1000) {
+                CountDownTimer esperaMegafono = new CountDownTimer(2500,500) {
                     @Override
                     public void onTick(long l) {
 

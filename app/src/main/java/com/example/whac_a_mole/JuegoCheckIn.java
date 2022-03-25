@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -35,6 +36,10 @@ public class JuegoCheckIn extends AppCompatActivity {
     protected Button volver;
     protected SoundPool sp;
     protected float volumeEf, volumeM, volumeEfMeg;
+    protected int contVerdes=0,contAmarillas=0,contRojas=0,contNegras=0;
+    protected boolean  backPressed=false;
+
+    MediaPlayer mp;
 
     protected long tiempoAnimacion =50;
 
@@ -84,8 +89,8 @@ public class JuegoCheckIn extends AppCompatActivity {
         setMal(ranNum);
 
         if(preferencias.getBoolean("EFECTOS",true)){
-            volumeEf = 0.75f;
-            volumeEfMeg = 0.01f;
+            volumeEf = 1;
+            volumeEfMeg = 0.3f;//
         }
         else{
             volumeEf = 0.0f;
@@ -99,17 +104,24 @@ public class JuegoCheckIn extends AppCompatActivity {
             volumeM = 0.0F;
         }
 
-        MediaPlayer mp = MediaPlayer.create(JuegoCheckIn.this, R.raw.musicajuegos);
+        mp = MediaPlayer.create(JuegoCheckIn.this, R.raw.musicajuegos);
         mp.setVolume(volumeM, volumeM);
         mp.setLooping(true);
         mp.start();
 
-        sp = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+        //sonidos
+        AudioAttributes audioAttributes = new
+                AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(
+                AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+
+        sp = new SoundPool.Builder().setMaxStreams(5).setAudioAttributes(audioAttributes).build();
+
         idAcierto = sp.load(this, R.raw.acierto, 1);
         idFallo = sp.load(this, R.raw.fallo, 1);
         idInicio = sp.load(this, R.raw.megafonia, 1);
         idFin = sp.load(this, R.raw.finalpartida, 1);
         idMegafoniaFin = sp.load(this, R.raw.megafoniasalir, 1);
+
 
         mal[0].setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,15 +260,30 @@ public class JuegoCheckIn extends AppCompatActivity {
         volver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mp.isPlaying()) {
-                    mp.stop();
-                    mp.release();
+
+                if(!backPressed){
+                    sp.play(idMegafoniaFin, volumeEfMeg, volumeEfMeg, 1, 0, 1);
+                    CountDownTimer esperaMegafono = new CountDownTimer(2500,500) {
+                        @Override
+                        public void onTick(long l) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
+                            mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(mi_intent);
+                            finish();
+                        }
+                    }.start();
+                }else{
+                    Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
+                    mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mi_intent);
+                    finish();
                 }
-                sp.play(idMegafoniaFin, volumeEfMeg, volumeEfMeg, 1, 0, 1);
-                Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
-                mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(mi_intent);
-                finish();
+
             }
         });
     }
@@ -265,6 +292,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     public void onBackPressed(){
         contCor=-1;
         isGameOver(true);
+        backPressed=true;
         volver.performClick();
     }
 
@@ -768,7 +796,7 @@ public class JuegoCheckIn extends AppCompatActivity {
 
             mal[x].setScaleY((float) 1.2); //prueba animacion
             mal[x].setScaleX((float) 1.2);
-            // AQUI VA EL SONIDO A PONER//
+
 
             cuentaAnimación[x]=new CountDownTimer(tiempoAnimacion,10) {
                 @Override
@@ -781,10 +809,11 @@ public class JuegoCheckIn extends AppCompatActivity {
                     mal[x].setScaleY((float) 1);
                     mal[x].setScaleX((float) 1);
                 }
-            }.start(); // Solo he añadido hasta aquí
+            }.start();
 
             mal[x].setImageResource(R.drawable.maleta_verde_facturada);
             sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
+            contVerdes++;
             typeMal[x] = 5;
         }
         else if(typeMal[x]==2){
@@ -810,6 +839,7 @@ public class JuegoCheckIn extends AppCompatActivity {
             if(contClick[x]==3){
                 mal[x].setImageResource(R.drawable.maleta_amarilla_facturada);
                 sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
+                contAmarillas++;
                 typeMal[x] = 5;
                 contClick[x] = 0;
             }
@@ -839,6 +869,7 @@ public class JuegoCheckIn extends AppCompatActivity {
             if(contClick[x]==5){
                 mal[x].setImageResource(R.drawable.maleta_roja_facturada);
                 sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
+                contRojas++;
                 typeMal[x] = 5;
                 contClick[x] = 0;
             }
@@ -866,6 +897,7 @@ public class JuegoCheckIn extends AppCompatActivity {
             if(contClick[x]==10){
                 mal[x].setImageResource(R.drawable.maleta_negra_facturada);
                 sp.play(idAcierto, volumeEf, volumeEf, 1, 0, 1);
+                contNegras++;
                 typeMal[x] = 5;
                 contClick[x] = 0;
                 if(contCor<3){
@@ -955,27 +987,6 @@ public class JuegoCheckIn extends AppCompatActivity {
         numC2 = records.getInt("NUMC2",-1);
         numC3 = records.getInt("NUMC3",-1);
 
-        /*if(nombre!="Jugador"){
-            if(nombre1.isEmpty()){
-                editor.putString("NOMBRE1",nombre);
-                editor.putLong("TIEMP1",temp);
-                editor.putInt("NUMC1",numClicks);
-                editor.commit();
-            }
-            else{
-                if(nombre2.isEmpty()){
-                    editor.putString("NOMBRE2",nombre);
-                    editor.putLong("TIEMP2",temp);
-                    editor.putInt("NUMC2",numClicks);
-                    editor.commit();
-                }
-                else{
-                    if(nombre3.isEmpty()){
-                        editor.putString("NOMBRE3",nombre);
-                        editor.putLong("TIEMP3",temp);
-                        editor.putInt("NUMC3",numClicks);
-                        editor.commit();
-                    }*/                                         //Sobra, Si el nombre es Jugador hay que ponerlo igual y no hace falta comprobar si esta vacío porque el tiempo y clics serán -1 y siempre será mayor, esto es lo que daba problemas
 
 
                         if(temp>tiemp1     ||    (temp==tiemp1)&&numClicks>numC1     ){ //si los tiempos son iguales se desempata por el numero de clics
@@ -1057,6 +1068,11 @@ public class JuegoCheckIn extends AppCompatActivity {
             }
             if(isBackPressed==false){
                 newRecord();
+
+                if(mp.isPlaying()){ //Se puede hacer de esta forma porque suena siempre, pero sin volumen en caso de desactivar la musica
+                    mp.stop();
+                    mp.release();
+                }
                 sp.play(idFin, volumeEf, volumeEf, 1, 0, 1);//recomendado volumen 0.02
                 gameOver.setVisibility(View.VISIBLE);
 
