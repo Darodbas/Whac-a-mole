@@ -22,7 +22,7 @@ public class JuegoCheckIn extends AppCompatActivity {
 
     protected ImageView[] mal = new ImageView[9];
     protected ImageView cor1, cor2, cor3,ivPortafoliocheckin;
-    protected TextView tiempo, gameOver, tiempoFinal,tvClicksTotales;
+    protected TextView tiempo, gameOver, tiempoFinal,tvClicksTotales,tvMaletasVerdes,tvMaletasAmarillas,tvMaletasRojas,tvMaletasNegras;
     protected int[] typeMal = new int[9];
     protected int[] contClick = new int[9];
     protected int[] tempOn = new int[20];
@@ -37,7 +37,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     protected SoundPool sp;
     protected float volumeEf, volumeM, volumeEfMeg;
     protected int contVerdes=0,contAmarillas=0,contRojas=0,contNegras=0;
-    protected boolean  backPressed=false;
+    protected boolean  backPressed=false,musicaParada=false;
 
     MediaPlayer mp;
 
@@ -73,6 +73,10 @@ public class JuegoCheckIn extends AppCompatActivity {
         //cosas que he añadido
         ivPortafoliocheckin = findViewById(R.id.ivPortafolioCheckin);
         tvClicksTotales = findViewById(R.id.tvClicksTotales);
+        tvMaletasVerdes = findViewById(R.id.tvMaletasVerdes);
+        tvMaletasAmarillas = findViewById(R.id.tvMaletasAmarillas);
+        tvMaletasRojas = findViewById(R.id.tvMaletasRojas);
+        tvMaletasNegras = findViewById(R.id.tvMaletasNegras);
 
 
         SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
@@ -290,6 +294,10 @@ public class JuegoCheckIn extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
+        if(!musicaParada){ //no se puede comprobar isPlaying despues de un Release//
+            mp.stop();
+            mp.release();
+        }
         contCor=-1;
         isGameOver(true);
         backPressed=true;
@@ -987,7 +995,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         numC2 = records.getInt("NUMC2",-1);
         numC3 = records.getInt("NUMC3",-1);
 
-
+        numClicks=contVerdes+contAmarillas*3+contRojas*5+contNegras*10;
 
                         if(temp>tiemp1     ||    (temp==tiemp1)&&numClicks>numC1     ){ //si los tiempos son iguales se desempata por el numero de clics
                             editor.putString("NOMBRE1",nombre);
@@ -1072,16 +1080,26 @@ public class JuegoCheckIn extends AppCompatActivity {
                 if(mp.isPlaying()){ //Se puede hacer de esta forma porque suena siempre, pero sin volumen en caso de desactivar la musica
                     mp.stop();
                     mp.release();
+                    musicaParada=true;
                 }
                 sp.play(idFin, volumeEf, volumeEf, 1, 0, 1);//recomendado volumen 0.02
                 gameOver.setVisibility(View.VISIBLE);
 
                 //Añadir portapapeles con resultados//
+                //numClicks=contVerdes+contAmarillas*3+contRojas*5+contNegras*10;
 
-                tiempoFinal.setText("Enhorabuena, has aguantado "+Long.toString(temp)+" segundos");
+                tiempoFinal.setText("Tiempo facturando: "+Long.toString(temp)+" segundos");
                 tvClicksTotales.setText("Clics totales: "+numClicks);
+                tvMaletasVerdes.setText("Maletas verdes facturadas: "+contVerdes);
+                tvMaletasAmarillas.setText("Maletas amarillas facturadas: "+contAmarillas);
+                tvMaletasRojas.setText("Maletas rojas facturadas: "+contRojas);
+                tvMaletasNegras.setText("Maletas negras facturadas: "+contNegras);
+
+
+
                 volver.setVisibility(View.VISIBLE);
                 ivPortafoliocheckin.setVisibility(View.VISIBLE);
+
             }
         }
     }

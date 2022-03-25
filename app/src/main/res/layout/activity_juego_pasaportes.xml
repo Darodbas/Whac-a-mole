@@ -445,14 +445,12 @@
         android:text="Resumen"
         android:textColor="#000000"
         android:textSize="34sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/gResumenDW"
         app:layout_constraintEnd_toStartOf="@+id/gVDRERes"
         app:layout_constraintHorizontal_bias="0.22"
         app:layout_constraintStart_toStartOf="@+id/gvIZQRes"
         app:layout_constraintTop_toTopOf="@+id/gresumenUp"
-        app:layout_constraintVertical_bias="0.0"
-        tools:visibility="gone" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/g40"

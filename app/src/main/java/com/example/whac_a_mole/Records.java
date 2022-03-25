@@ -82,15 +82,19 @@ public class Records extends AppCompatActivity {
 
         if(records.getLong("TIEMP1",-1)!=-1) {
            // tvCheckInPuntuacion[0].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP1",-1))+" s"); // El tiempo se muestra en minutos y segundo
-            tvCheckInPuntuacion[0].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP1",-1)/60)+":"+String.valueOf(records.getLong("TIEMP1",-1)%60));
+            tvCheckInPuntuacion[0].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP1",-1)/60)+":"+String.valueOf((records.getLong("TIEMP1",-1)%60)/10)+String.valueOf((records.getLong("TIEMP1",-1)%60)%10));
         }
         if(records.getLong("TIEMP2",-1)!=-1) {
             //tvCheckInPuntuacion[1].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP2",-1))+" s");
-            tvCheckInPuntuacion[1].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP2",-1)/60)+":"+String.valueOf(records.getLong("TIEMP2",-1)%60));
+           // tvCheckInPuntuacion[1].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP2",-1)/60)+":"+String.valueOf(records.getLong("TIEMP2",-1)%60));
+            tvCheckInPuntuacion[1].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP2",-1)/60)+":"+String.valueOf((records.getLong("TIEMP2",-1)%60)/10)+String.valueOf((records.getLong("TIEMP2",-1)%60)%10));
+
         }
         if(records.getLong("TIEMP3",-1)!=-1) {
             //tvCheckInPuntuacion[2].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP3",-1))+" s");
-            tvCheckInPuntuacion[2].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP3",-1)/60)+":"+String.valueOf(records.getLong("TIEMP3",-1)%60));
+            //tvCheckInPuntuacion[2].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP3",-1)/60)+":"+String.valueOf(records.getLong("TIEMP3",-1)%60));
+            tvCheckInPuntuacion[2].setText("Tiempo: "+String.valueOf(records.getLong("TIEMP3",-1)/60)+":"+String.valueOf((records.getLong("TIEMP3",-1)%60)/10)+String.valueOf((records.getLong("TIEMP3",-1)%60)%10));
+
         }
 
         if(records.getInt("NUMC1",-1)!=-1) {

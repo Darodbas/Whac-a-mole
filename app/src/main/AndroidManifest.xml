@@ -5,7 +5,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/iconoavion2"
-        android:label="@string/app_name"
+        android:label="Mole Airport"
         android:roundIcon="@drawable/iconoavion2"
         android:supportsRtl="true"
         android:theme="@style/Theme.Whacamole">
