@@ -25,16 +25,16 @@ public class JuegoCheckIn extends AppCompatActivity {
     protected int[] typeMal = new int[9];
     protected int[] contClick = new int[9];
     protected int[] tempOn = new int[20];
-    protected int contCor = 3, ranNum, idAcierto, idFallo, idInicio, idFin, numClicks;
+    protected int contCor = 3, ranNum, idAcierto, idFallo, idInicio, idFin, numClicks, idMegafoniaFin;
     protected long[] tempMal = new long[9];
-    protected static final long tCDTG = 10000, interval = 1000, interval2 = 200, interval3 = 100;
+    protected static final long tCDTG = 20000, interval = 1000, interval2 = 200, interval3 = 100;
     protected long temp, tempBien = 500, tempNueva = 1500, tVerd = 2000, tAmar = 3000, tRoja = 4000, tNegra = 5000, tiemp1, tiemp2, tiemp3;
     protected CountDownTimer[] CDTmal = new CountDownTimer[9];
     protected CountDownTimer[] CDTbien = new CountDownTimer[9];
     protected CountDownTimer CDTG1, CDTNueva;
     protected Button volver;
     protected SoundPool sp;
-    protected float volumeEf, volumeM;
+    protected float volumeEf, volumeM, volumeEfMeg;
 
     protected long tiempoAnimacion =50;
 
@@ -84,10 +84,12 @@ public class JuegoCheckIn extends AppCompatActivity {
         setMal(ranNum);
 
         if(preferencias.getBoolean("EFECTOS",true)){
-            volumeEf = 1;
+            volumeEf = 0.75f;
+            volumeEfMeg = 0.01f;
         }
         else{
-            volumeEf = 0.0F;
+            volumeEf = 0.0f;
+            volumeEfMeg = 0.0f;
         }
 
         if(preferencias.getBoolean("MUSICA", true)){
@@ -107,8 +109,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         idFallo = sp.load(this, R.raw.fallo, 1);
         idInicio = sp.load(this, R.raw.megafonia, 1);
         idFin = sp.load(this, R.raw.finalpartida, 1);
-
-        sp.play(idInicio, volumeEf, volumeEf, 1, 0, 1);
+        idMegafoniaFin = sp.load(this, R.raw.megafoniasalir, 1);
 
         mal[0].setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,6 +252,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                     mp.stop();
                     mp.release();
                 }
+                sp.play(idMegafoniaFin, volumeEfMeg, volumeEfMeg, 1, 0, 1);
                 Intent mi_intent = new Intent(view.getContext(), MainActivity.class);
                 mi_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(mi_intent);
@@ -262,7 +264,7 @@ public class JuegoCheckIn extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         contCor=-1;
-        isGameOver();
+        isGameOver(true);
         volver.performClick();
     }
 
@@ -277,11 +279,11 @@ public class JuegoCheckIn extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                if(tVerd>200) tVerd -= 200;
-                if(tAmar>200) tAmar -= 200;
-                if(tRoja>200) tRoja -= 200;
-                if(tNegra>200)  tNegra -= 200;
-                if(tempNueva>100) tempNueva -= 100;
+                if(tVerd>600) tVerd -= 200;
+                if(tAmar>800) tAmar -= 200;
+                if(tRoja>1000) tRoja -= 200;
+                if(tNegra>1500)  tNegra -= 200;
+                if(tempNueva>500) tempNueva -= 100;
                 tempOn[18]=0;
 
                 startTiempoG1();
@@ -521,7 +523,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 typeMal[0] = 0;
                 contCor--;
                 sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
-                isGameOver();
+                isGameOver(false);
             }
         }.start();
     }
@@ -545,7 +547,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 typeMal[1] = 0;
                 contCor--;
                 sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
-                isGameOver();
+                isGameOver(false);
             }
         }.start();
     }
@@ -569,7 +571,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 typeMal[2] = 0;
                 contCor--;
                 sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
-                isGameOver();
+                isGameOver(false);
             }
         }.start();
     }
@@ -593,7 +595,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 typeMal[3] = 0;
                 contCor--;
                 sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
-                isGameOver();
+                isGameOver(false);
             }
         }.start();
     }
@@ -617,7 +619,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 typeMal[4] = 0;
                 contCor--;
                 sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
-                isGameOver();
+                isGameOver(false);
             }
         }.start();
     }
@@ -641,7 +643,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 typeMal[5] = 0;
                 contCor--;
                 sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
-                isGameOver();
+                isGameOver(false);
             }
         }.start();
     }
@@ -665,7 +667,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 typeMal[6] = 0;
                 contCor--;
                 sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
-                isGameOver();
+                isGameOver(false);
             }
         }.start();
     }
@@ -689,7 +691,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 typeMal[7] = 0;
                 contCor--;
                 sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
-                isGameOver();
+                isGameOver(false);
             }
         }.start();
     }
@@ -713,7 +715,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 typeMal[8] = 0;
                 contCor--;
                 sp.play(idFallo, volumeEf, volumeEf, 1, 0, 1);
-                isGameOver();
+                isGameOver(false);
             }
         }.start();
     }
@@ -868,7 +870,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                 contClick[x] = 0;
                 if(contCor<3){
                     contCor++;
-                    isGameOver();
+                    isGameOver(false);
                 }
             }
         }
@@ -1007,7 +1009,7 @@ public class JuegoCheckIn extends AppCompatActivity {
 
 
 
-    protected void isGameOver(){
+    protected void isGameOver(boolean isBackPressed){
         int j;
         if(contCor==3){
             cor1.setVisibility(View.VISIBLE);
@@ -1050,19 +1052,21 @@ public class JuegoCheckIn extends AppCompatActivity {
             if(tempOn[17]==1) pauseBien9(8);
             if(tempOn[18]==1) pauseTiempoG1();
             if(tempOn[19]==1) pauseNueva();
-            newRecord();
             for(j=0;j<mal.length;j++){
                 mal[j].setVisibility(View.INVISIBLE);
             }
-            sp.play(idFin, volumeEf, volumeEf, 1, 0, 1);//recomendado volumen 0.02
-            gameOver.setVisibility(View.VISIBLE);
+            if(isBackPressed==false){
+                newRecord();
+                sp.play(idFin, volumeEf, volumeEf, 1, 0, 1);//recomendado volumen 0.02
+                gameOver.setVisibility(View.VISIBLE);
 
-            //Añadir portapapeles con resultados//
+                //Añadir portapapeles con resultados//
 
-            tiempoFinal.setText("Enhorabuena, has aguantado "+Long.toString(temp)+" segundos");
-            tvClicksTotales.setText("Clics totales: "+numClicks);
-            volver.setVisibility(View.VISIBLE);
-            ivPortafoliocheckin.setVisibility(View.VISIBLE);
+                tiempoFinal.setText("Enhorabuena, has aguantado "+Long.toString(temp)+" segundos");
+                tvClicksTotales.setText("Clics totales: "+numClicks);
+                volver.setVisibility(View.VISIBLE);
+                ivPortafoliocheckin.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
