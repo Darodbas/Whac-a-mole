@@ -108,38 +108,6 @@ public class JuegoCheckIn extends AppCompatActivity {
         //Empezamos con cuenta atras y cuando termine comenzará el juego
         CuentaAtras();
 
-        /*iniMal();
-        iniContClick();
-        iniTempOn();
-
-        startTiempoG1();
-        ranNum = (int) (Math.random() * 9);
-        setMal(ranNum);
-
-        if(preferencias.getBoolean("EFECTOS",true)){
-            volumeEf = 1;
-            volumeEfMeg = 0.3f;//
-        }
-        else{
-            volumeEf = 0.0f;
-            volumeEfMeg = 0.0f;
-        }
-
-        if(preferencias.getBoolean("MUSICA", true)){
-            volumeM = 0.05f;
-        }
-        else{
-            volumeM = 0.0F;
-        }
-
-        mp = MediaPlayer.create(JuegoCheckIn.this, R.raw.musicajuegos);
-        mp.setVolume(volumeM, volumeM);
-        mp.setLooping(true);
-        mp.start();
-
-        */ //Esto se incluye en el finish de la cuenta atras
-
-
 
 
         mal[0].setOnClickListener(new View.OnClickListener() {
@@ -1025,24 +993,30 @@ public class JuegoCheckIn extends AppCompatActivity {
         numClicks=contVerdes+contAmarillas*3+contRojas*5+contNegras*10;
 
                         if(temp>tiemp1     ||    (temp==tiemp1)&&numClicks>numC1     ){ //si los tiempos son iguales se desempata por el numero de clics
-                            editor.putString("NOMBRE1",nombre);
-                            editor.putLong("TIEMP1",temp);
-                            editor.putInt("NUMC1",numClicks);
-                            editor.putString("NOMBRE2",nombre1);
-                            editor.putLong("TIEMP2",tiemp1);
-                            editor.putInt("NUMC2",numC1);
+
                             editor.putString("NOMBRE3",nombre2);
                             editor.putLong("TIEMP3",tiemp2);
                             editor.putInt("NUMC3",numC2);
+                            editor.putString("NOMBRE2",nombre1);
+                            editor.putLong("TIEMP2",tiemp1);
+                            editor.putInt("NUMC2",numC1);
+                            editor.putString("NOMBRE1",nombre);
+                            editor.putLong("TIEMP1",temp);
+                            editor.putInt("NUMC1",numClicks);
+
+
                             editor.commit();
                         }
                         else if(temp>tiemp2      ||    (temp==tiemp2)&&numClicks>numC2){
+
+                            editor.putString("NOMBRE3",nombre2);
+                            editor.putLong("TIEMP3",tiemp2);
+                            editor.putInt("NUMC3",numC2);
+
                                 editor.putString("NOMBRE2",nombre);
                                 editor.putLong("TIEMP2",temp);
                                 editor.putInt("NUMC2",numClicks);
-                                editor.putString("NOMBRE3",nombre2);
-                                editor.putLong("TIEMP3",tiemp2);
-                                editor.putInt("NUMC3",numC2);
+
                                 editor.commit();
                             }
                             else if(temp>tiemp3      ||    (temp==tiemp3)&&numClicks>numC3){
