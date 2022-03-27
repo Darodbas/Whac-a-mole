@@ -247,7 +247,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         volver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                SharedPreferences preferencias = getSharedPreferences("PREFERENCIAS",MODE_PRIVATE);
 
                 if(cuentaAtrasOn){
                     cuentaAtras.cancel();
@@ -256,7 +256,7 @@ public class JuegoCheckIn extends AppCompatActivity {
                     startActivity(mi_intent);
                     finish();
 
-                }else if(!backPressed){
+                }else if(!backPressed&&preferencias.getBoolean("EFECTOS",true)){
                     sp.play(idMegafoniaFin, volumeEfMeg, volumeEfMeg, 1, 0, 1);
                     CountDownTimer esperaMegafono = new CountDownTimer(2500,500) {
                         @Override
