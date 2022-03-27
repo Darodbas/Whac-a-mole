@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder mi_builder = new AlertDialog.Builder
                 (MainActivity.this);
         mi_builder.setTitle("Atención")
-                .setMessage("Si deja en blanco el campo nombre aparecerá en los record como \"Jugador\"")
+                .setMessage("Si deja en blanco el campo nombre aparecerá en los récords como \"Jugador\"")
                 .setPositiveButton("Entendido",
                         new DialogInterface.OnClickListener() {
                             @Override

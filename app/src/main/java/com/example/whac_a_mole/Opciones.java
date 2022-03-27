@@ -29,7 +29,7 @@ public class Opciones extends AppCompatActivity {
         AlertDialog.Builder mi_builder = new AlertDialog.Builder
                 (Opciones.this);
         mi_builder.setTitle("Atención")
-                .setMessage("Esta seguro de que quiere borrar todos los records")
+                .setMessage("Esta seguro de que quiere borrar todos los récords")
                 .setPositiveButton("Si",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -81,7 +81,7 @@ public class Opciones extends AppCompatActivity {
         AlertDialog.Builder mi_builder = new AlertDialog.Builder
                 (Opciones.this);
         mi_builder.setTitle("Atención")
-                .setMessage("Unicamente se podrán guardar records jugando con 60 segundos")
+                .setMessage("Unicamente se podrán guardar récords jugando con 60 segundos")
                 .setPositiveButton("ACEPTAR",
                         new DialogInterface.OnClickListener() {
                             @Override
