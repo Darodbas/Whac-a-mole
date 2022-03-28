@@ -55,6 +55,21 @@ public class JuegoCheckIn extends AppCompatActivity {
         getWindow().setNavigationBarColor(Color.rgb(0,59,113));
         getWindow().setStatusBarColor(Color.rgb(0,59,113));
 
+        //sonidos
+        AudioAttributes audioAttributes = new
+                AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(
+                AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+
+        sp = new SoundPool.Builder().setMaxStreams(5).setAudioAttributes(audioAttributes).build();
+
+        idAcierto = sp.load(this, R.raw.acierto, 1);
+        idFallo = sp.load(this, R.raw.fallo, 1);
+        idInicio = sp.load(this, R.raw.megafonia, 1);
+        idFin = sp.load(this, R.raw.finalpartida, 1);
+        idMegafoniaFin = sp.load(this, R.raw.megafoniasalir, 1);
+        idBeep = sp.load(this, R.raw.beep, 1);
+        idFinalBeep = sp.load(this, R.raw.finalbeep, 1);
+
         mal[0] = findViewById(R.id.mal1);
         mal[1] = findViewById(R.id.mal2);
         mal[2] = findViewById(R.id.mal3);
@@ -85,28 +100,25 @@ public class JuegoCheckIn extends AppCompatActivity {
             mal[i].setVisibility(View.INVISIBLE);
         }
 
-        //sonidos
-        AudioAttributes audioAttributes = new
-                AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(
-                AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
-
-        sp = new SoundPool.Builder().setMaxStreams(5).setAudioAttributes(audioAttributes).build();
-
-        idAcierto = sp.load(this, R.raw.acierto, 1);
-        idFallo = sp.load(this, R.raw.fallo, 1);
-        idInicio = sp.load(this, R.raw.megafonia, 1);
-        idFin = sp.load(this, R.raw.finalpartida, 1);
-        idMegafoniaFin = sp.load(this, R.raw.megafoniasalir, 1);
-        idBeep = sp.load(this, R.raw.beep, 1);
-        idFinalBeep = sp.load(this, R.raw.finalbeep, 1);
-
-
 
         temp = 0;
         numClicks = 0;
         tiempo.setText("0");
         //Empezamos con cuenta atras y cuando termine comenzará el juego
-        CuentaAtras();
+        tiempo.setText("3");
+        tiempo.setTextColor(Color.GREEN);
+        CountDownTimer tiempoEsperaCuentaAtras = new CountDownTimer(100,100) {//si no no suenan los beeps//
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                CuentaAtras();
+            }
+        }.start();
+
 
 
 

@@ -2627,7 +2627,20 @@ public class JuegoPasaportes extends AppCompatActivity {
 
 
         //cuenta atras y empeza el juego
-        CuentaAtras();
+        tvCountdown.setText("3");
+        tvCountdown.setTextColor(Color.GREEN);
+        CountDownTimer tiempoEsperaCuentaAtras = new CountDownTimer(100,100) {//si no no suenan los beeps//
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                CuentaAtras();
+            }
+        }.start();
+
 
 
 

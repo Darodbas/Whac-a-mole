@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected TextView tvColorDificultad;
 
     protected ImageView ivInfoPasaportes, ivInfoFacturacion, ivOpciones, ivPodio,ivSalirPrincipal, ivSpeaker;
-    protected Spinner spDifPasaportes, spDifFacturacion;
+    protected Spinner spDifPasaportes;
     protected String[] nivelesDificultad={"Fácil","Medio","Difícil"};
     protected EditText etNombre;
     protected int aceptaSinNombre=0,musicaSonando=1;
@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
         btJugar2 = findViewById(R.id.btJugar2);
         ivInfoFacturacion = findViewById(R.id.ivInfoFacturacion);
         ivInfoPasaportes = findViewById(R.id.ivInfoPasaportes);
-        spDifFacturacion = findViewById(R.id.spDificultadcheckin);
         spDifPasaportes = findViewById(R.id.spDificultadPasaportes);
         ivOpciones = findViewById(R.id.ivConfig);
         ivPodio = findViewById(R.id.ivPodio);
