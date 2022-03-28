@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter mi_adaptador = new ArrayAdapter(this, android.R.layout.simple_spinner_item,nivelesDificultad);
         //asociamos adaptador
         spDifPasaportes.setAdapter(mi_adaptador);
-        spDifFacturacion.setAdapter(mi_adaptador);
+
 
         btJugar.setOnClickListener(new View.OnClickListener() {
             @Override

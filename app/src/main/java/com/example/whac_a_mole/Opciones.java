@@ -81,7 +81,7 @@ public class Opciones extends AppCompatActivity {
         AlertDialog.Builder mi_builder = new AlertDialog.Builder
                 (Opciones.this);
         mi_builder.setTitle("Atención")
-                .setMessage("Unicamente se podrán guardar récords jugando con 60 segundos")
+                .setMessage("Únicamente se podrán guardar récords jugando con 60 segundos")
                 .setPositiveButton("ACEPTAR",
                         new DialogInterface.OnClickListener() {
                             @Override
