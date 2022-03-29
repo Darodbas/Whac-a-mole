@@ -107,7 +107,7 @@ public class JuegoCheckIn extends AppCompatActivity {
         //Empezamos con cuenta atras y cuando termine comenzará el juego
         tiempo.setText("3");
         tiempo.setTextColor(Color.GREEN);
-        CountDownTimer tiempoEsperaCuentaAtras = new CountDownTimer(100,100) {//si no no suenan los beeps//
+        CountDownTimer tiempoEsperaCuentaAtras = new CountDownTimer(200,100) {//si no no suenan los beeps//
             @Override
             public void onTick(long l) {
 
