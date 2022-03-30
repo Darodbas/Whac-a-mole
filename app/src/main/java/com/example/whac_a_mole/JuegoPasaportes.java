@@ -265,7 +265,7 @@ public class JuegoPasaportes extends AppCompatActivity {
             @Override
             public void onFinish() {
 
-//marco la tinta verde que es la seleccionada
+//marcamos la tinta verde que es la seleccionada
                 ivTintaVerde.setScaleX(1.25F);
                 ivTintaVerde.setScaleY(1.25F);
                 ivTintaVerde.setImageResource(R.drawable.tintaverdesel);
@@ -320,15 +320,15 @@ public class JuegoPasaportes extends AppCompatActivity {
     //Función inicia el CDT (Aquí se definen los tiempos) (cdt interno que controla los pasaportes)
     protected void startTimer(){
         tiempoRestante=tiempoMilisegundos;
-        //countDownInterval: Tiempo que tarda en generarse* un nuevo pasaporte (puede no generarse si toca una posicion que esta ocupada)
+        //countDownInterval: Tiempo que tarda en generarse* un nuevo pasaporte (puede no generarse si toca una posicion que esta ocupada), la probabilidad de que se genere un pasaporte es inversamente proporcional a los que ya haya en pantalla
         CDT = new CountDownTimer(tiempoMilisegundos, intervalAparicionPas) {
             @Override
             public void onTick(long l) {
 
                 //Tiempo espera: tiempo en que desaparece el pasaporte
                 tiempoRestante-=intervalAparicionPas;
-                if(tiempoRestante>=tiempoDesaparecePas) {
-                    GeneraPas((long) (tiempoDesaparecePas+tiempoDesaparecePas*Math.random()));
+                if(tiempoRestante>=tiempoDesaparecePas) {//Solo genera si hay tiempo de que se mantenga en pantalla lo que toca
+                    GeneraPas((long) (tiempoDesaparecePas+tiempoDesaparecePas*Math.random()));//el tiempo que permanece el pasaporte en pantalla tiene base fija y parte aleatoria
                 }
 
             }
